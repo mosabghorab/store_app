@@ -1,11 +1,14 @@
 //||... File for app routes ...||
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:storeapp/src/controllers/local_controllers/shared_preferences_controller.dart';
+import 'package:storeapp/src/database/app_database.dart';
 import 'package:storeapp/src/models/local_models/user.dart';
 
 class AppShared {
   // ||... shared var for SharedPreferencesController ...||
   static SharedPreferencesController sharedPreferencesController;
+  // ||... shared var for app database ...||
+  static AppDatabase appDatabase;
   // ||... app lang ...||
   static Map<String, String> appLang;
   // ||... screen_utils ...||
