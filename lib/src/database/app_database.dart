@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:sqflite/sqflite.dart';
+import 'package:storeapp/src/utils/constants.dart';
 
 class AppDatabase {
   Database db;
@@ -15,9 +16,15 @@ class AppDatabase {
     String databasePath = await getDatabasesPath();
     db = await openDatabase('$databasePath/store.db', version: 1,
         onCreate: (Database db, int version) async {
-      // When creating the db, create the table
-      await db.execute(
-          'CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)');
+      // When creating the db, create those tables.
+      await db.execute(Constants.APP_DATABASE_TABLE_USERS_CREATION_QUERY);
+      await db.execute(Constants.APP_DATABASE_TABLE_ORDERS_CREATION_QUERY);
+      await db.execute(Constants.APP_DATABASE_TABLE_PRODUCTS_CREATION_QUERY);
+      await db
+          .execute(Constants.APP_DATABASE_TABLE_ORDERS_DETAILS_CREATION_QUERY);
+      await db.execute(Constants.APP_DATABASE_TABLE_ADDRESSES_CREATION_QUERY);
+      await db
+          .execute(Constants.APP_DATABASE_TABLE_CART_PRODUCTS_CREATION_QUERY);
     });
   }
 }
