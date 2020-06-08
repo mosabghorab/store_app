@@ -34,7 +34,7 @@ class User {
       );
 
   Map<String, dynamic> toJson() => {
-        Constants.APP_DATABASE_FIELD_USERS_ID: _id,
+//        Constants.APP_DATABASE_FIELD_USERS_ID: _id,
         Constants.APP_DATABASE_FIELD_USERS_NAME: _name,
         Constants.APP_DATABASE_FIELD_USERS_EMAIL: _email,
         Constants.APP_DATABASE_FIELD_USERS_PASSWORD: _password,

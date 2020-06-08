@@ -26,6 +26,12 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>I want it to take the user personal image from gallery</string>
+    <key>NSCameraUsageDescription</key>
+    <string>I want it to take the user personal image from camera</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>I want it to take the user sound</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

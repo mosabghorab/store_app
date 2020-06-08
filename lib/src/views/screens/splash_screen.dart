@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
@@ -21,34 +22,32 @@ class SplashScreenBody extends StatefulWidget {
 }
 
 class _SplashScreenBodyState extends State<SplashScreenBody> {
-//  UserController _userController;
-//  AuthController _authController;
+  UserController _userController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-//    _userController = UserController.instance;
-//    _authController = AuthController.instance;
+    _userController = UserController.instance;
     _route();
   }
 
   void _route() async {
-//    await Future.delayed(Duration(seconds: 2));
-//    FirebaseUser currentUser = await _authController.getCurrentUser();
-//    if (currentUser != null) {
-//      if (AppShared.sharedPreferencesController.isRememberedUser()) {
-//        AppShared.currentUser = await _userController.getUser(currentUser.uid);
-//        Navigator.pushReplacementNamed(context, Constants.SCREENS_HOME_SCREEN);
-//      } else {
-//        _authController.signOut();
-//        Navigator.pushReplacementNamed(
-//            context, Constants.SCREENS_SIGN_IN_SCREEN);
-//      }
-//    } else {
-//      Navigator.pushReplacementNamed(context, Constants.SCREENS_SIGN_IN_SCREEN);
-//    }
+    await Future.delayed(Duration(seconds: 2));
+    if (AppShared.sharedPreferencesController.getIsLogin()) {
+      if (AppShared.sharedPreferencesController.isRememberedUser()) {
+        int id = AppShared.sharedPreferencesController.getUserId();
+        AppShared.currentUser = await _userController.getUser(id);
+        Navigator.pushReplacementNamed(context, Constants.SCREENS_HOME_SCREEN);
+      } else {
+        _userController.logoutUser();
+        Navigator.pushReplacementNamed(
+            context, Constants.SCREENS_SIGN_IN_SCREEN);
+      }
+    } else {
+      Navigator.pushReplacementNamed(context, Constants.SCREENS_SIGN_IN_SCREEN);
+    }
   }
 
   @override
@@ -64,12 +63,12 @@ class _SplashScreenBodyState extends State<SplashScreenBody> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              '${Constants.ASSETS_IMAGES_PATH}corona.jpg',
+              '${Constants.ASSETS_IMAGES_PATH}store.png',
               width: 250,
               height: 250,
             ),
             Text(
-              'COVID 19',
+              'Store App',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 35,

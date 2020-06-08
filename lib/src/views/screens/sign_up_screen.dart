@@ -1,11 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
+import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/sign_up_screen_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
+import 'package:storeapp/src/utils/enums.dart';
+import 'package:storeapp/src/utils/helpers.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
 import 'package:storeapp/src/views/dialogs/image_source_dialog.dart';
 
@@ -30,12 +35,13 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
   GlobalKey<FormState> _formKey;
   GlobalKey<ScaffoldState> _scaffoldKey;
   SignUpScreenNotifiers _signUpScreenNotifiers;
-//  AuthController _authController;
+  UserController _userController;
 
   String _name;
   String _email;
   String _password;
   String _confirmPassword;
+  String _personalImageAsBase64String;
 
   @override
   void initState() {
@@ -43,7 +49,7 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
     super.initState();
     _formKey = GlobalKey();
     _scaffoldKey = GlobalKey();
-//    _authController = AuthController.instance;
+    _userController = UserController.instance;
     _signUpScreenNotifiers =
         Provider.of<SignUpScreenNotifiers>(context, listen: false);
   }
@@ -60,36 +66,37 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
   }
 
   // ||.. create new user ..||
-  void _createUserWithEmailAndPassword() async {
-//    if (!_formKey.currentState.validate()) return;
-//    _formKey.currentState.save();
-//    try {
-//      if (_confirmPassword != _password) {
-//        Helpers.showMessage('Confirm password does not match password',
-//            MessageType.MESSAGE_FAILED);
-//        return;
-//      }
-//      _signUpScreenNotifiers.isLoading = true;
-//      String _personalImagePath;
-//      if (_signUpScreenNotifiers.personalImage != null) {
-//        _personalImagePath = await _storageController.uploadFile(
-//          '${Constants.FIREBASE_STORAGE_USERS_IMAGES_PATH}${_name}_${DateTime.now().millisecondsSinceEpoch}',
-//          _signUpScreenNotifiers.personalImage,
-//        );
-//      }
-//      await _authController.createUserWithEmailAndPassword(_email, _password,
-//          _name, _personalImagePath, Helpers.getUserStatus(UserStatus.ONLINE));
-//      _signUpScreenNotifiers.isLoading = false;
-//      Navigator.pushNamedAndRemoveUntil(
-//        context,
-//        Constants.SCREENS_HOME_SCREEN,
-//        (_) => false,
-//      );
-//    } catch (error) {
-//      _signUpScreenNotifiers.isLoading = false;
-//      Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
-//      throw error;
-//    }
+  void _createUser() async {
+    if (!_formKey.currentState.validate()) return;
+    _formKey.currentState.save();
+    try {
+      if (_confirmPassword != _password) {
+        Helpers.showMessage('Confirm password does not match password',
+            MessageType.MESSAGE_FAILED);
+        return;
+      }
+      _signUpScreenNotifiers.isLoading = true;
+      _personalImageAsBase64String =
+          base64Encode(_signUpScreenNotifiers.personalImage.readAsBytesSync());
+      int result = await _userController.createUser(
+        User(
+            email: _email,
+            password: _password,
+            name: _name,
+            personalImage: _personalImageAsBase64String,
+            type: _signUpScreenNotifiers.userType),
+      );
+      _signUpScreenNotifiers.isLoading = false;
+      if (result < 0) {
+        Helpers.showMessage('Failed!!', MessageType.MESSAGE_FAILED);
+      } else {
+        Helpers.showMessage('Success!!', MessageType.MESSAGE_FAILED);
+      }
+    } catch (error) {
+      _signUpScreenNotifiers.isLoading = false;
+      Helpers.showMessage(error.toString(), MessageType.MESSAGE_FAILED);
+      throw error;
+    }
   }
 
   @override
@@ -118,7 +125,7 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
                 child: Text(
                   AppShared.appLang['SignUp'],
                   style: TextStyle(
-                    color: Colors.red,
+                    color: Colors.blue,
                     fontSize: 45,
                   ),
                 ),
@@ -160,7 +167,7 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: Colors.red,
+                                          color: Colors.blue,
                                           width: 2,
                                         ),
                                       ),
@@ -173,7 +180,7 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
                                                 ? Icon(
                                                     Icons.person,
                                                     size: 70,
-                                                    color: Colors.red,
+                                                    color: Colors.blue,
                                                   )
                                                 : Container(
                                                     height: 130,
@@ -186,6 +193,46 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
                                                     ),
                                                   ),
                                       ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      child: Text('User Type')),
+                                  Selector<SignUpScreenNotifiers, int>(
+                                    selector: (_, value) => value.userType,
+                                    builder: (_, userType, __) => Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Text('Client'),
+                                            Radio(
+                                                value: 1,
+                                                groupValue: userType,
+                                                onChanged: (value) {
+                                                  _signUpScreenNotifiers
+                                                      .userType = value;
+                                                })
+                                          ],
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            Text('Merchant'),
+                                            Radio(
+                                                value: 2,
+                                                groupValue: userType,
+                                                onChanged: (value) {
+                                                  _signUpScreenNotifiers
+                                                      .userType = value;
+                                                })
+                                          ],
+                                        )
+                                      ],
                                     ),
                                   ),
                                   TextFormField(
@@ -314,8 +361,8 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
                             style: BorderStyle.none,
                           ),
                         ),
-                        onPressed: _createUserWithEmailAndPassword,
-                        color: Colors.red,
+                        onPressed: _createUser,
+                        color: Colors.blue,
                         child: Text(
                           AppShared.appLang['SignUp'],
                           style: TextStyle(

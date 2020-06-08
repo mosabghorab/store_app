@@ -82,7 +82,7 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
                   child: Text(
                     AppShared.appLang['Login'],
                     style: TextStyle(
-                      color: Colors.red,
+                      color: Colors.blue,
                       fontSize: 45,
                     ),
                   ),
@@ -198,7 +198,7 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
                       ),
                     ),
                     onPressed: _signInWithEmailAndPassword,
-                    color: Colors.red,
+                    color: Colors.blue,
                     child: Text(
                       AppShared.appLang['Login'],
                       style: TextStyle(
@@ -214,7 +214,7 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
                   width: double.infinity,
                   child: OutlineButton(
                     borderSide: BorderSide(
-                      color: Colors.red,
+                      color: Colors.blue,
                     ),
                     shape: OutlineInputBorder(
                       borderRadius: BorderRadius.all(

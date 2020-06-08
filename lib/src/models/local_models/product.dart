@@ -1,3 +1,4 @@
+import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class Product {
@@ -7,6 +8,8 @@ class Product {
   String _image;
   int _merchantId;
   String _description;
+
+  User _merchant;
 
   Product({
     int id,
@@ -34,7 +37,7 @@ class Product {
       );
 
   Map<String, dynamic> toJson() => {
-        Constants.APP_DATABASE_FIELD_PRODUCTS_ID: _id,
+//        Constants.APP_DATABASE_FIELD_PRODUCTS_ID: _id,
         Constants.APP_DATABASE_FIELD_PRODUCTS_NAME: _name,
         Constants.APP_DATABASE_FIELD_PRODUCTS_PRICE: _price,
         Constants.APP_DATABASE_FIELD_PRODUCTS_MERCHANT_ID: _merchantId,
@@ -76,5 +79,11 @@ class Product {
 
   set id(int value) {
     _id = value;
+  }
+
+  User get merchant => _merchant;
+
+  set merchant(User value) {
+    _merchant = value;
   }
 }

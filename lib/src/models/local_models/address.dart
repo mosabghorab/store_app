@@ -1,3 +1,4 @@
+import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class Address {
@@ -8,6 +9,8 @@ class Address {
   int _clientId;
   String _country;
   String _city;
+
+  User _client;
 
   Address({
     int id,
@@ -38,7 +41,7 @@ class Address {
       );
 
   Map<String, dynamic> toJson() => {
-        Constants.APP_DATABASE_FIELD_ADDRESSES_ID: _id,
+//        Constants.APP_DATABASE_FIELD_ADDRESSES_ID: _id,
         Constants.APP_DATABASE_FIELD_ADDRESSES_NAME: _name,
         Constants.APP_DATABASE_FIELD_ADDRESSES_COUNTRY: _country,
         Constants.APP_DATABASE_FIELD_ADDRESSES_CITY: _city,
@@ -87,5 +90,11 @@ class Address {
 
   set id(int value) {
     _id = value;
+  }
+
+  User get client => _client;
+
+  set client(User value) {
+    _client = value;
   }
 }
