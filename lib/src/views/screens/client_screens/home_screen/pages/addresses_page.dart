@@ -71,7 +71,6 @@ class _AddressesPageBodyState extends State<AddressesPageBody> {
       );
       _addressesPageNotifiers.addresses =
           await _addressController.getAllAddresses(AppShared.currentUser.id);
-      await Future.delayed(Duration(seconds: 1));
       _addressesPageNotifiers.isLoading = false;
       if (result > 0)
         Helpers.showMessage(
@@ -92,7 +91,6 @@ class _AddressesPageBodyState extends State<AddressesPageBody> {
           .deleteAddress(_addressesPageNotifiers.addresses[index].id);
       _addressesPageNotifiers.addresses =
           await _addressController.getAllAddresses(AppShared.currentUser.id);
-      await Future.delayed(Duration(seconds: 1));
       _addressesPageNotifiers.isLoading = false;
       if (result > 0)
         Helpers.showMessage(

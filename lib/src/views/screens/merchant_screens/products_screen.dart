@@ -61,7 +61,6 @@ class _ProductsScreenBodyState extends State<ProductsScreenBody> {
           .deleteProduct(_productsScreenNotifiers.products[index].id);
       _productsScreenNotifiers.products =
           await _productController.getAllProducts();
-      await Future.delayed(Duration(seconds: 1));
       _productsScreenNotifiers.isLoading = false;
       if (result > 0)
         Helpers.showMessage(

@@ -92,6 +92,9 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
       if (result < 0) {
         Helpers.showMessage('Failed!!', MessageType.MESSAGE_FAILED);
       } else {
+        AppShared.sharedPreferencesController.setIsLogin(true);
+        AppShared.sharedPreferencesController.setRememberedUser(true);
+        AppShared.sharedPreferencesController.setUserId(result);
         Navigator.pushNamedAndRemoveUntil(
           context,
           Constants.SCREENS_HOME_SCREEN,

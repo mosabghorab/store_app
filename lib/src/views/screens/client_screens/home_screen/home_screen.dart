@@ -33,7 +33,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   List _pagesTitles = [
     'Home',
     'Cart',
-    'Others',
+    'Orders',
     'Addresses',
     'Profile',
   ];

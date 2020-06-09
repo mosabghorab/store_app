@@ -83,7 +83,6 @@ class _CreateProductScreenBodyState extends State<CreateProductScreenBody> {
           price: _price,
         ),
       );
-      await Future.delayed(Duration(seconds: 1));
       _createProductScreenNotifiers.isLoading = false;
       if (result > 0) {
         Helpers.showMessage(

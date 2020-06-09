@@ -90,11 +90,79 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                             child: Column(
                               children: <Widget>[
                                 ListTile(
-                                  title: Text('Order number ${index1 + 1}'),
+                                  title: Text('Order number : ${index1 + 1}'),
+                                  subtitle: Text(
+                                      '${DateTime.fromMillisecondsSinceEpoch(_orderPageNotifiers.orders[index1].date).toString()}'),
                                   trailing: Container(
+                                    color: _orderPageNotifiers
+                                                .orders[index1].status ==
+                                            1
+                                        ? Colors.orange
+                                        : _orderPageNotifiers
+                                                    .orders[index1].status ==
+                                                2
+                                            ? Colors.red
+                                            : Colors.green,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
                                     child: Text(
-                                        '${_orderPageNotifiers.orders[index1].status}'),
+                                      "${_orderPageNotifiers.orders[index1].status == 1 ? 'Pending' : _orderPageNotifiers.orders[index1].status == 2 ? "Rejected" : 'Approved'}",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: Text('Address'),
+                                ),
+                                Container(
+                                  child: ListTile(
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        Text(
+                                          _orderPageNotifiers
+                                              .orders[index1].address.name,
+                                          style: TextStyle(
+                                            fontSize: 23,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${_orderPageNotifiers.orders[index1].address.country} , ${_orderPageNotifiers.orders[index1].address.city} , ${_orderPageNotifiers.orders[index1].address.streetNo} , ${_orderPageNotifiers.orders[index1].address.houseNo}",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: Text('Products'),
+                                ),
+                                SizedBox(
+                                  height: 5,
                                 ),
                                 Container(
                                   child: ListView.builder(
@@ -189,91 +257,17 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                                       horizontal: 8,
                                                       vertical: 2,
                                                     ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: <Widget>[
-                                                        InkWell(
-                                                          onTap: () {
-//                                                      _decrementCartProduct(
-//                                                          index);
-                                                          },
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    bottom: 10),
-                                                            child: Icon(
-                                                              Icons.minimize,
-                                                              size: 17,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Text("2"),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-//                                                      _incrementCartProduct(
-//                                                          index);
-                                                          },
-                                                          child: Icon(
-                                                            Icons.add,
-                                                            size: 17,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
+                                                    child: Container(
+                                                        alignment:
+                                                            AlignmentDirectional
+                                                                .center,
+                                                        child: Text("2")),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ),
                                         ],
-                                      ),
-                                      trailing: InkWell(
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) => AlertDialog(
-                                              title: Text('Delete product'),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text(
-                                                    'Cancel',
-                                                    style: TextStyle(
-                                                        color: Colors.blue),
-                                                  ),
-                                                ),
-                                                FlatButton(
-                                                  onPressed: () {
-//                                              _deleteCartProduct(index);
-                                                  },
-                                                  child: Text(
-                                                    'Delete',
-                                                    style: TextStyle(
-                                                        color: Colors.red),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                        child: Icon(
-                                          Icons.close,
-                                          color: Colors.red,
-                                        ),
                                       ),
                                     ),
                                   ),

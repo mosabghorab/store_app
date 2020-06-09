@@ -53,7 +53,6 @@ class _CartPageBodyState extends State<CartPageBody> {
           .deleteCartProduct(_cartPageNotifiers.cartProducts[index].id);
       _cartPageNotifiers.cartProducts = await _cartProductController
           .getAllCartProducts(AppShared.currentUser.id);
-      await Future.delayed(Duration(seconds: 1));
       _cartPageNotifiers.isLoading = false;
       if (result > 0)
         Helpers.showMessage(

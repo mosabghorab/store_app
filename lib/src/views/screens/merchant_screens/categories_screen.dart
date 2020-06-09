@@ -61,7 +61,6 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody> {
           .createCategory(Category(name: _categoryName));
       _categoriesScreenNotifiers.categories =
           await _categoryController.getAllCategories();
-      await Future.delayed(Duration(seconds: 1));
       _categoriesScreenNotifiers.isLoading = false;
       if (result > 0)
         Helpers.showMessage(
@@ -84,7 +83,6 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody> {
           id, Category(name: _categoryName, id: id));
       _categoriesScreenNotifiers.categories =
           await _categoryController.getAllCategories();
-      await Future.delayed(Duration(seconds: 1));
       _categoriesScreenNotifiers.isLoading = false;
       if (result > 0)
         Helpers.showMessage(
@@ -105,7 +103,6 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody> {
           .deleteCategory(_categoriesScreenNotifiers.categories[index].id);
       _categoriesScreenNotifiers.categories =
           await _categoryController.getAllCategories();
-      await Future.delayed(Duration(seconds: 1));
       _categoriesScreenNotifiers.isLoading = false;
       if (result > 0)
         Helpers.showMessage(

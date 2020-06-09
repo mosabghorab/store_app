@@ -35,7 +35,7 @@ class OrderController {
   //get all Cart Products.
   Future<List<Order>> getAllOrders(int clientId) async {
     List<Map> ordersJson = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_ORDERS} where clientId=?',
+        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_ORDERS} where clientId=? order by id desc',
         [clientId]);
     List<Order> orders =
         ordersJson.map<Order>((value) => Order.fromJson(value)).toList();
