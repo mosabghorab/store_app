@@ -66,7 +66,7 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
       }
     } catch (error) {
       _signInScreenNotifiers.isLoading = false;
-      Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
+      Helpers.showMessage(error.toString(), MessageType.MESSAGE_FAILED);
     }
   }
 

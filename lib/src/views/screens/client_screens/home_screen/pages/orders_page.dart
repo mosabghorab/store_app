@@ -39,7 +39,7 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
 
   void _init() async {
     _orderPageNotifiers.orders =
-        await _orderController.getAllOrders(AppShared.currentUser.id);
+        await _orderController.getAllOrdersByClientId(AppShared.currentUser.id);
     _orderPageNotifiers.isLoading = false;
   }
 

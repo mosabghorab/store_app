@@ -12,6 +12,7 @@ class Constants {
   static const String SCREENS_CATEGORIES_SCREEN = 'CategoriesScreen';
   static const String SCREENS_PRODUCTS_SCREEN = 'ProductsScreen';
   static const String SCREENS_CREATE_PRODUCT_SCREEN = 'CreateProductScreen';
+  static const String SCREENS_ORDERS_SCREEN = 'OrdersScreen';
 
   //</ Merchant Screens >
 

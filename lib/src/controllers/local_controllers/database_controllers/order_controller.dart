@@ -33,7 +33,7 @@ class OrderController {
   }
 
   //get all Cart Products.
-  Future<List<Order>> getAllOrders(int clientId) async {
+  Future<List<Order>> getAllOrdersByClientId(int clientId) async {
     List<Map> ordersJson = await AppShared.db.rawQuery(
         'SELECT * FROM ${Constants.APP_DATABASE_TABLE_ORDERS} where clientId=? order by id desc',
         [clientId]);
@@ -44,7 +44,23 @@ class OrderController {
       orders[i].address =
           await _addressController.getAddress(orders[i].addressId);
       orders[i].orderDetailsList = await _orderDetailsController
-          .getAllOrderDetails(clientId, orders[i].id);
+          .getAllOrderDetailsByClientId(clientId, orders[i].id);
+    }
+    return orders;
+  }
+
+  //get all Cart Products.
+  Future<List<Order>> getAllOrders() async {
+    List<Map> ordersJson = await AppShared.db.rawQuery(
+        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_ORDERS} order by id desc');
+    List<Order> orders =
+        ordersJson.map<Order>((value) => Order.fromJson(value)).toList();
+    for (int i = 0; i < orders.length; i++) {
+      orders[i].client = await _userController.getUser(orders[i].clientId);
+      orders[i].address =
+          await _addressController.getAddress(orders[i].addressId);
+      orders[i].orderDetailsList =
+          await _orderDetailsController.getAllOrderDetails(orders[i].id);
     }
     return orders;
   }

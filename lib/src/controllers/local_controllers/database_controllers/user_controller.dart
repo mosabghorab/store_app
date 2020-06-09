@@ -20,8 +20,13 @@ class UserController {
 
   //create new user.
   Future<int> createUser(User user) async {
-    return await AppShared.db
+    int result = await AppShared.db
         .insert(Constants.APP_DATABASE_TABLE_USERS, user.toJson());
+    AppShared.sharedPreferencesController.setIsLogin(true);
+    AppShared.sharedPreferencesController.setRememberedUser(true);
+    AppShared.sharedPreferencesController.setUserId(result);
+    AppShared.currentUser = await getUser(result);
+    return result;
   }
 
   //login user.

@@ -42,9 +42,14 @@ class _SplashScreenBodyState extends State<SplashScreenBody> {
       if (AppShared.sharedPreferencesController.isRememberedUser()) {
         int id = AppShared.sharedPreferencesController.getUserId();
         if (id != -5) {
-          AppShared.currentUser = await _userController.getUser(id);
-          Navigator.pushReplacementNamed(
-              context, Constants.SCREENS_HOME_SCREEN);
+          if (id == -1) {
+            Navigator.pushReplacementNamed(
+                context, Constants.SCREENS_SIGN_IN_SCREEN);
+          } else {
+            AppShared.currentUser = await _userController.getUser(id);
+            Navigator.pushReplacementNamed(
+                context, Constants.SCREENS_HOME_SCREEN);
+          }
         } else {
           AppShared.currentUser = User(
               id: -5,

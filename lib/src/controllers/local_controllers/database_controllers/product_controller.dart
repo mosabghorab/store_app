@@ -39,6 +39,20 @@ class ProductController {
     return products;
   }
 
+  //get Products by category.
+  Future<List<Product>> getProductsByCategory(int categoryId) async {
+    List<Map> productsJson = await AppShared.db.rawQuery(
+        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_PRODUCTS} where categoryId = ?',
+        [categoryId]);
+    List<Product> products =
+        productsJson.map<Product>((value) => Product.fromJson(value)).toList();
+    for (int i = 0; i < products.length; i++) {
+      products[i].category =
+          await _categoryController.getCategory(products[i].categoryId);
+    }
+    return products;
+  }
+
   //get all Products.
   Future<Product> getProduct(int id) async {
     List<Map> productsJson = await AppShared.db.rawQuery(

@@ -49,6 +49,13 @@ class _HomePageBodyState extends State<HomePageBody> {
     _homePageNotifiers.productsIsLoading = false;
   }
 
+  void _sortByCategory(int categoryId) async {
+    _homePageNotifiers.productsIsLoading = true;
+    _homePageNotifiers.products =
+        await _productController.getProductsByCategory(categoryId);
+    _homePageNotifiers.productsIsLoading = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final _mediaQuery = MediaQuery.of(context);
@@ -111,8 +118,21 @@ class _HomePageBodyState extends State<HomePageBody> {
                                   Selector<HomePageNotifiers, int>(
                                 selector: (_, value) => value.selectedCategory,
                                 builder: (_, selectedCategory, __) => InkWell(
-                                  onTap: () {
+                                  onTap: () async {
                                     _homePageNotifiers.selectedCategory = index;
+                                    if (index == 0) {
+                                      _homePageNotifiers.productsIsLoading =
+                                          true;
+                                      _homePageNotifiers.products =
+                                          await _productController
+                                              .getAllProducts();
+                                      _homePageNotifiers.productsIsLoading =
+                                          false;
+                                      return;
+                                    }
+                                    _sortByCategory(
+                                      _homePageNotifiers.categories[index].id,
+                                    );
                                   },
                                   child: Container(
                                     height: 15,
