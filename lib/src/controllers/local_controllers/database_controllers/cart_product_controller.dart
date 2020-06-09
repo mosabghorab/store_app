@@ -50,6 +50,13 @@ class CartProductController {
     );
   }
 
+  //delete Cart Product.
+  Future<int> deleteAllCartProducts() async {
+    return await AppShared.db.delete(
+      Constants.APP_DATABASE_TABLE_CART_PRODUCTS,
+    );
+  }
+
   //update Cart Product.
   Future<int> updateCartProduct(int id, CartProduct cartProduct) async {
     return await AppShared.db.update(

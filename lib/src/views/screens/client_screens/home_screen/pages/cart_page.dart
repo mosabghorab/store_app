@@ -6,6 +6,7 @@ import 'package:storeapp/src/controllers/local_controllers/database_controllers/
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/pages_notifiers/cart_page_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
+import 'package:storeapp/src/utils/constants.dart';
 import 'package:storeapp/src/utils/enums.dart';
 import 'package:storeapp/src/utils/helpers.dart';
 import 'package:storeapp/src/views/components/status_components/loading_component.dart';
@@ -121,7 +122,7 @@ class _CartPageBodyState extends State<CartPageBody> {
                     ),
                   )
                 : Container(
-          padding: AppStyles.defaultPadding2,
+                    padding: AppStyles.defaultPadding2,
                     child: Column(
                       children: <Widget>[
                         Expanded(
@@ -309,7 +310,17 @@ class _CartPageBodyState extends State<CartPageBody> {
                                 style: BorderStyle.none,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(
+                                Constants.SCREENS_BILL_SCREEN,
+                                arguments: _cartPageNotifiers.cartProducts,
+                              )
+                                  .then((value) async {
+                                _cartPageNotifiers.isLoading = true;
+                                _init();
+                              });
+                            },
                             color: Colors.blue,
                             child: Text(
                               'Order Now',

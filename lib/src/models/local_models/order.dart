@@ -1,4 +1,5 @@
 import 'package:storeapp/src/models/local_models/address.dart';
+import 'package:storeapp/src/models/local_models/order_details.dart';
 import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
@@ -11,6 +12,7 @@ class Order {
 
   User _client;
   Address _address;
+  List<OrderDetails> _orderDetailsList;
 
   Order({
     int id,
@@ -82,5 +84,11 @@ class Order {
 
   set addressId(int value) {
     _addressId = value;
+  }
+
+  List<OrderDetails> get orderDetailsList => _orderDetailsList;
+
+  set orderDetailsList(List<OrderDetails> value) {
+    _orderDetailsList = value;
   }
 }

@@ -1,5 +1,6 @@
 //||... File for app routes ...||
 import 'package:flutter/cupertino.dart';
+import 'package:storeapp/src/views/screens/client_screens/bill_screen.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/home_screen.dart';
 import 'package:storeapp/src/views/screens/client_screens/product_details_screen.dart';
 import 'package:storeapp/src/views/screens/merchant_screens/categories_screen.dart';
@@ -22,4 +23,5 @@ Map<String, Widget Function(BuildContext context)> appRoutes = {
   Constants.SCREENS_PRODUCTS_SCREEN: (_) => ProductsScreen(),
   Constants.SCREENS_CREATE_PRODUCT_SCREEN: (_) => CreateProductScreen(),
   Constants.SCREENS_PRODUCT_DETAILS_SCREEN: (_) => ProductDetailsScreen(),
+  Constants.SCREENS_BILL_SCREEN: (_) => BillScreen(),
 };

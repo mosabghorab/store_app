@@ -5,7 +5,7 @@ import 'package:storeapp/src/views/components/parent_component.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/addresses_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/cart_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/home_page.dart';
-import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/others_page.dart';
+import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/orders_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/profile_page.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -95,7 +95,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                 children: <Widget>[
                   HomePage(),
                   CartPage(),
-                  OthersPage(),
+                  OrdersPage(),
                   AddressesPage(),
                   ProfilePage(),
                 ],
