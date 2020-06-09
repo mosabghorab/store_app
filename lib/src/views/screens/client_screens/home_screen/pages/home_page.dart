@@ -204,7 +204,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                               crossAxisCount: 2,
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10,
-                              childAspectRatio: 1 / 1.4,
+                              childAspectRatio: 1 / 1.6,
                             ),
                             itemCount: _homePageNotifiers.products.length,
                             shrinkWrap: true,

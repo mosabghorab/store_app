@@ -153,8 +153,8 @@ class _ProductsScreenBodyState extends State<ProductsScreenBody> {
                               ],
                             ),
                             trailing: Container(
-                              width: 70,
-                              child: Row(
+                              width: 40,
+                              child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[

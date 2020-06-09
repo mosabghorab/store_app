@@ -15,7 +15,7 @@ class ImageSourceDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final _mediaQuery = MediaQuery.of(context);
     return Container(
-      height: AppShared.screenUtil.setHeight(550),
+      height: AppShared.screenUtil.setHeight(600),
       alignment: AlignmentDirectional.centerStart,
       padding: AppStyles.defaultPadding3,
       child: Column(
