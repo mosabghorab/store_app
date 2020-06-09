@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/home_screen_notifiers.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
+import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/addresses_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/cart_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/home_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/others_page.dart';
@@ -33,6 +34,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
     'Home',
     'Cart',
     'Others',
+    'Addresses',
     'Profile',
   ];
 
@@ -94,6 +96,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                   HomePage(),
                   CartPage(),
                   OthersPage(),
+                  AddressesPage(),
                   ProfilePage(),
                 ],
                 onPageChanged: (pageIndex) {
@@ -137,9 +140,17 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.person,
+                  Icons.location_on,
                   size: 28,
                   color: pageIndex == 3 ? Colors.blue : Colors.grey[300],
+                ),
+                title: Text(''),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person,
+                  size: 28,
+                  color: pageIndex == 4 ? Colors.blue : Colors.grey[300],
                 ),
                 title: Text(''),
               ),

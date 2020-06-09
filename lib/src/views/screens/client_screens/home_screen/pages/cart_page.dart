@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/cart_product_controller.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/pages_notifiers/cart_page_notifiers.dart';
+import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
+import 'package:storeapp/src/utils/enums.dart';
+import 'package:storeapp/src/utils/helpers.dart';
 import 'package:storeapp/src/views/components/status_components/loading_component.dart';
 
 class CartPage extends StatelessWidget {
@@ -39,6 +42,27 @@ class _CartPageBodyState extends State<CartPageBody> {
     _cartPageNotifiers.cartProducts = await _cartProductController
         .getAllCartProducts(AppShared.currentUser.id);
     _cartPageNotifiers.isLoading = false;
+  }
+
+  void _deleteCartProduct(index) async {
+    Navigator.pop(context);
+    _cartPageNotifiers.isLoading = true;
+    try {
+      int result = await _cartProductController
+          .deleteCartProduct(_cartPageNotifiers.cartProducts[index].id);
+      _cartPageNotifiers.cartProducts = await _cartProductController
+          .getAllCartProducts(AppShared.currentUser.id);
+      await Future.delayed(Duration(seconds: 1));
+      _cartPageNotifiers.isLoading = false;
+      if (result > 0)
+        Helpers.showMessage(
+            'Cart product deleted successfully', MessageType.MESSAGE_SUCCESS);
+      else
+        Helpers.showMessage('Operation failed', MessageType.MESSAGE_FAILED);
+    } catch (error) {
+      _cartPageNotifiers.isLoading = false;
+      Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
+    }
   }
 
   void _incrementCartProduct(int index) {
@@ -96,163 +120,206 @@ class _CartPageBodyState extends State<CartPageBody> {
                       ),
                     ),
                   )
-                : ListView.builder(
-                    itemCount: _cartPageNotifiers.cartProducts.length,
-                    itemBuilder: (_, index) => Card(
-                      elevation: 4,
-                      child: Container(
-                        child: ListTile(
-                          title: Row(
-                            children: <Widget>[
-                              _cartPageNotifiers
-                                          .cartProducts[index].product.image ==
-                                      null
-                                  ? Container(
-                                      height: 120,
-                                      width: 120,
-                                      color: Colors.red,
-                                    )
-                                  : Container(
-                                      height: 120,
-                                      width: 120,
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(10)),
-                                        child: Image.memory(
-                                          base64Decode(_cartPageNotifiers
-                                              .cartProducts[index]
-                                              .product
-                                              .image),
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                : Container(
+          padding: AppStyles.defaultPadding2,
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: _cartPageNotifiers.cartProducts.length,
+                            itemBuilder: (_, index) => Card(
+                              elevation: 4,
+                              child: Container(
+                                child: ListTile(
+                                  title: Row(
                                     children: <Widget>[
-                                      Text(
-                                        _cartPageNotifiers
-                                            .cartProducts[index].product.name,
-                                        style: TextStyle(
-                                          fontSize: 23,
-                                        ),
-                                      ),
-                                      Text(
-                                        "\$${_cartPageNotifiers.cartProducts[index].product.price}",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.blue,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Container(
-                                        color: Colors.grey[100],
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 2,
-                                        ),
-                                        child: Text(
-                                            "${_cartPageNotifiers.cartProducts[index].product.category.name} "),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Container(
-                                        color: Colors.grey[100],
-                                        width: 100,
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 2,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            InkWell(
-                                              onTap: () {
-                                                _decrementCartProduct(index);
-                                              },
-                                              child: Container(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 10),
-                                                child: Icon(
-                                                  Icons.minimize,
-                                                  size: 17,
-                                                  color: Colors.grey,
+                                      _cartPageNotifiers.cartProducts[index]
+                                                  .product.image ==
+                                              null
+                                          ? Container(
+                                              height: 120,
+                                              width: 120,
+                                              color: Colors.red,
+                                            )
+                                          : Container(
+                                              height: 120,
+                                              width: 120,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(10)),
+                                                child: Image.memory(
+                                                  base64Decode(
+                                                      _cartPageNotifiers
+                                                          .cartProducts[index]
+                                                          .product
+                                                          .image),
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                                "${_cartPageNotifiers.cartProducts[index].quantity} "),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                _incrementCartProduct(index);
-                                              },
-                                              child: Icon(
-                                                Icons.add,
-                                                size: 17,
-                                                color: Colors.grey,
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: <Widget>[
+                                              Text(
+                                                _cartPageNotifiers
+                                                    .cartProducts[index]
+                                                    .product
+                                                    .name,
+                                                style: TextStyle(
+                                                  fontSize: 23,
+                                                ),
                                               ),
-                                            )
-                                          ],
+                                              Text(
+                                                "\$${_cartPageNotifiers.cartProducts[index].product.price}",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.blue,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Container(
+                                                color: Colors.grey[100],
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 8,
+                                                  vertical: 2,
+                                                ),
+                                                child: Text(
+                                                    "${_cartPageNotifiers.cartProducts[index].product.category.name} "),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                color: Colors.grey[100],
+                                                width: 100,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 8,
+                                                  vertical: 2,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    InkWell(
+                                                      onTap: () {
+                                                        _decrementCartProduct(
+                                                            index);
+                                                      },
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 10),
+                                                        child: Icon(
+                                                          Icons.minimize,
+                                                          size: 17,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                        "${_cartPageNotifiers.cartProducts[index].quantity} "),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        _incrementCartProduct(
+                                                            index);
+                                                      },
+                                                      child: Icon(
+                                                        Icons.add,
+                                                        size: 17,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
+                                  trailing: InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                          title: Text('Delete product'),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            ),
+                                            FlatButton(
+                                              onPressed: () {
+                                                _deleteCartProduct(index);
+                                              },
+                                              child: Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
-                          trailing: InkWell(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: Text('Delete product'),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        'Cancel',
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                    ),
-                                    FlatButton(
-                                      onPressed: () {
-//                                              _deleteProduct(index);
-                                      },
-                                      child: Text(
-                                        'Delete',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.red,
                             ),
                           ),
                         ),
-                      ),
+                        Container(
+                          width: double.infinity,
+                          child: RaisedButton(
+                            shape: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              borderSide: BorderSide(
+                                style: BorderStyle.none,
+                              ),
+                            ),
+                            onPressed: () {},
+                            color: Colors.blue,
+                            child: Text(
+                              'Order Now',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
       ),
