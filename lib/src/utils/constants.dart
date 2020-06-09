@@ -19,6 +19,8 @@ class Constants {
 
   //< Client Screens >
   static const String SCREENS_HOME_SCREEN = 'HomeScreen';
+  static const String SCREENS_PRODUCT_DETAILS_SCREEN = 'ProductDetailsScreen';
+
   //</ Client Screens >
 
 //      ||.............||

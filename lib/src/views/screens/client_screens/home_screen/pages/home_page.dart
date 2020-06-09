@@ -7,6 +7,7 @@ import 'package:storeapp/src/controllers/local_controllers/database_controllers/
 import 'package:storeapp/src/models/local_models/category.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/pages_notifiers/home_page_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
+import 'package:storeapp/src/utils/constants.dart';
 import 'package:storeapp/src/views/components/status_components/loading_component.dart';
 
 class HomePage extends StatelessWidget {
@@ -181,19 +182,66 @@ class _HomePageBodyState extends State<HomePageBody> {
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 1 / 1.4,
                             ),
                             itemCount: _homePageNotifiers.products.length,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (_, index) => Column(
-                              children: <Widget>[
-                                Image.memory(
-                                  base64Decode(
-                                      _homePageNotifiers.products[index].image),
+                            itemBuilder: (_, index) => InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  Constants.SCREENS_PRODUCT_DETAILS_SCREEN,
+                                  arguments: _homePageNotifiers.products[index],
+                                );
+                              },
+                              child: Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    _homePageNotifiers.products[index].image ==
+                                            null
+                                        ? Container(
+                                            width: 50,
+                                            height: 100,
+                                            color: Colors.green,
+                                          )
+                                        : Container(
+                                            width: double.infinity,
+                                            height: 180,
+                                            child: Image.memory(
+                                              base64Decode(_homePageNotifiers
+                                                  .products[index].image),
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Container(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      child: Text(
+                                        '${_homePageNotifiers.products[index].name}',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      child: Text(
+                                        '\$${_homePageNotifiers.products[index].price}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                    '${_homePageNotifiers.products[index].name}'),
-                              ],
+                              ),
                             ),
                           ),
                         ),

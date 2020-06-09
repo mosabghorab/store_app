@@ -2,7 +2,7 @@ import 'package:storeapp/src/models/local_models/product.dart';
 import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
-class CartProducts {
+class CartProduct {
   int _id;
   int _clientId;
   int _productId;
@@ -11,7 +11,7 @@ class CartProducts {
   User _client;
   Product _product;
 
-  CartProducts({
+  CartProduct({
     int id,
     int clientId,
     int productId,
@@ -23,7 +23,7 @@ class CartProducts {
     this._productId = productId;
   }
 
-  factory CartProducts.fromJson(Map<String, dynamic> json) => CartProducts(
+  factory CartProduct.fromJson(Map<String, dynamic> json) => CartProduct(
         id: json[Constants.APP_DATABASE_FIELD_CART_PRODUCTS_ID],
         clientId: json[Constants.APP_DATABASE_FIELD_CART_PRODUCTS_CLIENT_ID],
         quantity: json[Constants.APP_DATABASE_FIELD_CART_PRODUCTS_QUANTITY],

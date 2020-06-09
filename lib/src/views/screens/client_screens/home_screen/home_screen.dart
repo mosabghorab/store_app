@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/home_screen_notifiers.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
-import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/chat_page.dart';
+import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/cart_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/home_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/others_page.dart';
 import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/profile_page.dart';
@@ -31,7 +31,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   PageController _pageController;
   List _pagesTitles = [
     'Home',
-    'Chat',
+    'Cart',
     'Others',
     'Profile',
   ];
@@ -92,7 +92,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                 physics: NeverScrollableScrollPhysics(),
                 children: <Widget>[
                   HomePage(),
-                  ChatPage(),
+                  CartPage(),
                   OthersPage(),
                   ProfilePage(),
                 ],

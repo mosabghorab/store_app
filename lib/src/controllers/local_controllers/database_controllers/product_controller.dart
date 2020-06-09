@@ -39,6 +39,17 @@ class ProductController {
     return products;
   }
 
+  //get all Products.
+  Future<Product> getProduct(int id) async {
+    List<Map> productsJson = await AppShared.db.rawQuery(
+        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_PRODUCTS} where id=?',
+        [id]);
+    Product product = Product.fromJson(productsJson[0]);
+    product.category =
+        await _categoryController.getCategory(product.categoryId);
+    return product;
+  }
+
   //delete Product.
   Future<int> deleteProduct(int id) async {
     return await AppShared.db.delete(
