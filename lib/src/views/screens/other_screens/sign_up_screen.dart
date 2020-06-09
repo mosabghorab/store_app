@@ -6,9 +6,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
 import 'package:storeapp/src/models/local_models/user.dart';
-import 'package:storeapp/src/notifiers/screens_notifiers/sign_up_screen_notifiers.dart';
+import 'package:storeapp/src/notifiers/screens_notifiers/other_screens_notifiers/sign_up_screen_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
+import 'package:storeapp/src/utils/constants.dart';
 import 'package:storeapp/src/utils/enums.dart';
 import 'package:storeapp/src/utils/helpers.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
@@ -80,17 +81,22 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
           base64Encode(_signUpScreenNotifiers.personalImage.readAsBytesSync());
       int result = await _userController.createUser(
         User(
-            email: _email,
-            password: _password,
-            name: _name,
-            personalImage: _personalImageAsBase64String,
-            type: _signUpScreenNotifiers.userType),
+          email: _email,
+          password: _password,
+          name: _name,
+          personalImage: _personalImageAsBase64String,
+          type: Helpers.getUserType(UserType.USER_TYPE_CLIENT),
+        ),
       );
       _signUpScreenNotifiers.isLoading = false;
       if (result < 0) {
         Helpers.showMessage('Failed!!', MessageType.MESSAGE_FAILED);
       } else {
-        Helpers.showMessage('Success!!', MessageType.MESSAGE_FAILED);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Constants.SCREENS_HOME_SCREEN,
+          (_) => false,
+        );
       }
     } catch (error) {
       _signUpScreenNotifiers.isLoading = false;
@@ -197,43 +203,6 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
                                   ),
                                   SizedBox(
                                     height: 10,
-                                  ),
-                                  Container(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text('User Type')),
-                                  Selector<SignUpScreenNotifiers, int>(
-                                    selector: (_, value) => value.userType,
-                                    builder: (_, userType, __) => Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            Text('Client'),
-                                            Radio(
-                                                value: 1,
-                                                groupValue: userType,
-                                                onChanged: (value) {
-                                                  _signUpScreenNotifiers
-                                                      .userType = value;
-                                                })
-                                          ],
-                                        ),
-                                        Row(
-                                          children: <Widget>[
-                                            Text('Merchant'),
-                                            Radio(
-                                                value: 2,
-                                                groupValue: userType,
-                                                onChanged: (value) {
-                                                  _signUpScreenNotifiers
-                                                      .userType = value;
-                                                })
-                                          ],
-                                        )
-                                      ],
-                                    ),
                                   ),
                                   TextFormField(
                                     keyboardType: TextInputType.text,

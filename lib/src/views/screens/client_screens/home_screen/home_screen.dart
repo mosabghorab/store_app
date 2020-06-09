@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeapp/src/notifiers/screens_notifiers/home_screen_notifiers/home_screen_notifiers.dart';
+import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/home_screen_notifiers.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
-import 'package:storeapp/src/views/screens/home_screen/pages/chat_page.dart';
-import 'package:storeapp/src/views/screens/home_screen/pages/home_page.dart';
-import 'package:storeapp/src/views/screens/home_screen/pages/others_page.dart';
-import 'package:storeapp/src/views/screens/home_screen/pages/profile_page.dart';
+import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/chat_page.dart';
+import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/home_page.dart';
+import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/others_page.dart';
+import 'package:storeapp/src/views/screens/client_screens/home_screen/pages/profile_page.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -49,7 +49,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         elevation: 0,
         centerTitle: false,
         title: Selector<HomeScreenNotifiers, int>(
@@ -112,23 +112,35 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             type: BottomNavigationBarType.fixed,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.ac_unit),
-                title: Text(''),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.ac_unit),
-                title: Text(''),
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.assignment,
+                  Icons.home,
                   size: 28,
-                  color: pageIndex == 2 ? Colors.red : Colors.grey[300],
+                  color: pageIndex == 0 ? Colors.blue : Colors.grey[300],
                 ),
                 title: Text(''),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.ac_unit),
+                icon: Icon(
+                  Icons.shopping_cart,
+                  size: 28,
+                  color: pageIndex == 1 ? Colors.blue : Colors.grey[300],
+                ),
+                title: Text(''),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.card_travel,
+                  size: 28,
+                  color: pageIndex == 2 ? Colors.blue : Colors.grey[300],
+                ),
+                title: Text(''),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person,
+                  size: 28,
+                  color: pageIndex == 3 ? Colors.blue : Colors.grey[300],
+                ),
                 title: Text(''),
               ),
             ],

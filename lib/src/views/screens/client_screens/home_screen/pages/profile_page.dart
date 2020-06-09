@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
+import 'package:storeapp/src/utils/constants.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -15,22 +19,19 @@ class ProfilePageBody extends StatefulWidget {
 }
 
 class _ProfilePageBodyState extends State<ProfilePageBody> {
-//  AuthController _authController;
-//  UserController _userController;
+  UserController _userController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-//    _authController = AuthController.instance;
-//    _userController = UserController.instance;
+    _userController = UserController.instance;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 16),
       child: ListView(
         children: <Widget>[
           SizedBox(
@@ -46,14 +47,17 @@ class _ProfilePageBodyState extends State<ProfilePageBody> {
                         width: 150,
                         height: 150,
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: Colors.blue,
                           borderRadius: BorderRadius.all(
                             Radius.circular(80),
                           ),
                         ),
                         child: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(AppShared.currentUser.personalImage),
+                          backgroundImage: MemoryImage(
+                            base64Decode(
+                              AppShared.currentUser.personalImage,
+                            ),
+                          ),
                         ),
                       )
                     : Container(
@@ -72,7 +76,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody> {
                         height: 150,
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: Colors.blue,
                           borderRadius: BorderRadius.all(
                             Radius.circular(80),
                           ),
@@ -105,15 +109,9 @@ class _ProfilePageBodyState extends State<ProfilePageBody> {
           ),
           FlatButton.icon(
             onPressed: () {
-//              _authController.signOut();
-//              AppShared.currentUser.lastSeen =
-//                  DateTime.now().millisecondsSinceEpoch;
-//              AppShared.currentUser.status =
-//                  Helpers.getUserStatus(UserStatus.OFFLINE);
-//              _userController.updateUser(
-//                  AppShared.currentUser.uid, AppShared.currentUser);
-//              Navigator.pushReplacementNamed(
-//                  context, Constants.SCREENS_SPLASH_SCREEN);
+              _userController.logoutUser();
+              Navigator.pushReplacementNamed(
+                  context, Constants.SCREENS_SPLASH_SCREEN);
             },
             icon: Icon(
               Icons.exit_to_app,

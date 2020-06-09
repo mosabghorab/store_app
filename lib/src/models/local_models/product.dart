@@ -1,3 +1,4 @@
+import 'package:storeapp/src/models/local_models/category.dart';
 import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
@@ -7,9 +8,11 @@ class Product {
   double _price;
   String _image;
   int _merchantId;
+  int _categoryId;
   String _description;
 
   User _merchant;
+  Category _category;
 
   Product({
     int id,
@@ -17,6 +20,7 @@ class Product {
     String description,
     double price,
     int merchantId,
+    int categoryId,
     String image,
   }) {
     this._description = description;
@@ -25,6 +29,7 @@ class Product {
     this._price = price;
     this._image = image;
     this._merchantId = merchantId;
+    this._categoryId = categoryId;
   }
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -34,6 +39,7 @@ class Product {
         description: json[Constants.APP_DATABASE_FIELD_PRODUCTS_DESCRIPTION],
         image: json[Constants.APP_DATABASE_FIELD_PRODUCTS_IMAGE],
         merchantId: json[Constants.APP_DATABASE_FIELD_PRODUCTS_MERCHANT_ID],
+        categoryId: json[Constants.APP_DATABASE_FIELD_PRODUCTS_CATEGORY_ID],
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,6 +49,7 @@ class Product {
         Constants.APP_DATABASE_FIELD_PRODUCTS_MERCHANT_ID: _merchantId,
         Constants.APP_DATABASE_FIELD_PRODUCTS_DESCRIPTION: _description,
         Constants.APP_DATABASE_FIELD_PRODUCTS_IMAGE: _image,
+        Constants.APP_DATABASE_FIELD_PRODUCTS_CATEGORY_ID: _categoryId,
       };
 
   String get description => _description;
@@ -85,5 +92,17 @@ class Product {
 
   set merchant(User value) {
     _merchant = value;
+  }
+
+  Category get category => _category;
+
+  set category(Category value) {
+    _category = value;
+  }
+
+  int get categoryId => _categoryId;
+
+  set categoryId(int value) {
+    _categoryId = value;
   }
 }

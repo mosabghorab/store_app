@@ -9,7 +9,7 @@ import 'package:storeapp/src/utils/helpers.dart';
 import 'package:storeapp/src/utils/routes.dart';
 
 Future<void> _init() async {
-  AppShared.appDatabase = AppDatabase();
+  AppShared.db = await AppDatabase.initDatabase();
   AppShared.sharedPreferencesController =
       await SharedPreferencesController.instance;
   Helpers.changeAppLang(AppShared.sharedPreferencesController.getAppLang());

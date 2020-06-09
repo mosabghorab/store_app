@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
+import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
+import 'package:storeapp/src/utils/enums.dart';
+import 'package:storeapp/src/utils/helpers.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -38,8 +41,20 @@ class _SplashScreenBodyState extends State<SplashScreenBody> {
     if (AppShared.sharedPreferencesController.getIsLogin()) {
       if (AppShared.sharedPreferencesController.isRememberedUser()) {
         int id = AppShared.sharedPreferencesController.getUserId();
-        AppShared.currentUser = await _userController.getUser(id);
-        Navigator.pushReplacementNamed(context, Constants.SCREENS_HOME_SCREEN);
+        if (id != -5) {
+          AppShared.currentUser = await _userController.getUser(id);
+          Navigator.pushReplacementNamed(
+              context, Constants.SCREENS_HOME_SCREEN);
+        } else {
+          AppShared.currentUser = User(
+              id: -5,
+              name: 'Merchant',
+              email: 'merchant@gmail.com',
+              password: 'merchant',
+              type: Helpers.getUserType(UserType.USER_TYPE_MERCHANT));
+          Navigator.pushReplacementNamed(
+              context, Constants.SCREENS_DASHBOARD_SCREEN);
+        }
       } else {
         _userController.logoutUser();
         Navigator.pushReplacementNamed(
@@ -68,11 +83,11 @@ class _SplashScreenBodyState extends State<SplashScreenBody> {
               height: 250,
             ),
             Text(
-              'Store App',
+              'STORE APP',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 35,
-                color: Colors.red,
+                color: Colors.blue,
               ),
             ),
             SizedBox(

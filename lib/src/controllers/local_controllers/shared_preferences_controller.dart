@@ -46,7 +46,7 @@ class SharedPreferencesController {
 
   // get the current user login status.
   bool getIsLogin() {
-    return _sharedPreferences.getString(Constants.SHARED_IS_LOGIN) ??
+    return _sharedPreferences.getBool(Constants.SHARED_IS_LOGIN) ??
         Constants.SHARED_IS_LOGIN_DEFAULT_VALUE;
   }
 
