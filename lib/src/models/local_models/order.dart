@@ -1,47 +1,54 @@
 import 'package:storeapp/src/models/local_models/address.dart';
-import 'package:storeapp/src/models/local_models/order_details.dart';
+import 'package:storeapp/src/models/local_models/order_products.dart';
 import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class Order {
-  int _id;
-  int _clientId;
-  int _addressId;
+  String _id;
+  String _clientId;
+  String _merchantId;
+  String _addressId;
   int _status;
   int _date;
+  List<OrderProducts> _orderProducts;
 
+  // Read Only
   User _client;
+  User _merchant;
   Address _address;
-  List<OrderDetails> _orderDetailsList;
 
   Order({
-    int id,
-    int clientId,
-    int addressId,
+    String id,
+    String clientId,
+    String merchantId,
+    String addressId,
     int status,
     int date,
   }) {
     this._id = id;
     this._status = status;
     this._clientId = clientId;
+    this._merchantId = merchantId;
     this._addressId = addressId;
     this._date = date;
   }
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
-        id: json[Constants.APP_DATABASE_FIELD_ORDERS_ID],
-        clientId: json[Constants.APP_DATABASE_FIELD_ORDERS_CLIENT_ID],
-        status: json[Constants.APP_DATABASE_FIELD_ORDERS_STATUS],
-        date: json[Constants.APP_DATABASE_FIELD_ORDERS_DATE],
-        addressId: json[Constants.APP_DATABASE_FIELD_ORDERS_ADDRESS_ID],
+        id: json[Constants.FIREBASE_ORDERS_FIELD_ID],
+        clientId: json[Constants.FIREBASE_ORDERS_FIELD_CLIENT_ID],
+        merchantId: json[Constants.FIREBASE_ORDERS_FIELD_MERCHANT_ID],
+        status: json[Constants.FIREBASE_ORDERS_FIELD_STATUS],
+        date: json[Constants.FIREBASE_ORDERS_FIELD_DATE],
+        addressId: json[Constants.FIREBASE_ORDERS_FIELD_ADDRESS_ID],
       );
 
   Map<String, dynamic> toJson() => {
-//        Constants.APP_DATABASE_FIELD_ORDERS_ID: _id,
-        Constants.APP_DATABASE_FIELD_ORDERS_CLIENT_ID: _clientId,
-        Constants.APP_DATABASE_FIELD_ORDERS_ADDRESS_ID: _addressId,
-        Constants.APP_DATABASE_FIELD_ORDERS_STATUS: _status,
-        Constants.APP_DATABASE_FIELD_ORDERS_DATE: _date,
+//        Constants.FIREBASE_ORDERS_FIELD_ID: _id,
+        Constants.FIREBASE_ORDERS_FIELD_CLIENT_ID: _clientId,
+        Constants.FIREBASE_ORDERS_FIELD_MERCHANT_ID: _merchantId,
+        Constants.FIREBASE_ORDERS_FIELD_ADDRESS_ID: _addressId,
+        Constants.FIREBASE_ORDERS_FIELD_STATUS: _status,
+        Constants.FIREBASE_ORDERS_FIELD_DATE: _date,
       };
 
   User get client => _client;
@@ -62,15 +69,15 @@ class Order {
     _status = value;
   }
 
-  int get clientId => _clientId;
+  String get clientId => _clientId;
 
-  set clientId(int value) {
+  set clientId(String value) {
     _clientId = value;
   }
 
-  int get id => _id;
+  String get id => _id;
 
-  set id(int value) {
+  set id(String value) {
     _id = value;
   }
 
@@ -80,15 +87,27 @@ class Order {
     _address = value;
   }
 
-  int get addressId => _addressId;
+  String get addressId => _addressId;
 
-  set addressId(int value) {
+  set addressId(String value) {
     _addressId = value;
   }
 
-  List<OrderDetails> get orderDetailsList => _orderDetailsList;
+  List<OrderProducts> get orderProducts => _orderProducts;
 
-  set orderDetailsList(List<OrderDetails> value) {
-    _orderDetailsList = value;
+  set orderProducts(List<OrderProducts> value) {
+    _orderProducts = value;
+  }
+
+  User get merchant => _merchant;
+
+  set merchant(User value) {
+    _merchant = value;
+  }
+
+  String get merchantId => _merchantId;
+
+  set merchantId(String value) {
+    _merchantId = value;
   }
 }

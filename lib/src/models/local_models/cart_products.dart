@@ -4,37 +4,39 @@ import 'package:storeapp/src/utils/constants.dart';
 
 class CartProduct {
   int _id;
-  int _clientId;
-  int _productId;
+  String _merchantId;
+  String _productId;
   int _quantity;
 
-  User _client;
+  //Read Only
+  User _merchant;
   Product _product;
 
   CartProduct({
     int id,
-    int clientId,
-    int productId,
+    String merchantId,
+    String productId,
     int quantity,
   }) {
     this._id = id;
-    this._quantity = quantity;
-    this._clientId = clientId;
+    this._merchantId = merchantId;
     this._productId = productId;
+    this._quantity = quantity;
   }
 
   factory CartProduct.fromJson(Map<String, dynamic> json) => CartProduct(
         id: json[Constants.APP_DATABASE_FIELD_CART_PRODUCTS_ID],
-        clientId: json[Constants.APP_DATABASE_FIELD_CART_PRODUCTS_CLIENT_ID],
         quantity: json[Constants.APP_DATABASE_FIELD_CART_PRODUCTS_QUANTITY],
+        merchantId:
+            json[Constants.APP_DATABASE_FIELD_CART_PRODUCTS_MERCHANT_ID],
         productId: json[Constants.APP_DATABASE_FIELD_CART_PRODUCTS_PRODUCT_ID],
       );
 
   Map<String, dynamic> toJson() => {
 //        Constants.APP_DATABASE_FIELD_CART_PRODUCTS_ID: _id,
-        Constants.APP_DATABASE_FIELD_CART_PRODUCTS_CLIENT_ID: _clientId,
-        Constants.APP_DATABASE_FIELD_CART_PRODUCTS_QUANTITY: _quantity,
+        Constants.APP_DATABASE_FIELD_CART_PRODUCTS_MERCHANT_ID: _merchantId,
         Constants.APP_DATABASE_FIELD_CART_PRODUCTS_PRODUCT_ID: _productId,
+        Constants.APP_DATABASE_FIELD_CART_PRODUCTS_QUANTITY: _quantity,
       };
 
   Product get product => _product;
@@ -43,33 +45,33 @@ class CartProduct {
     _product = value;
   }
 
-  User get client => _client;
-
-  set client(User value) {
-    _client = value;
-  }
-
   int get quantity => _quantity;
 
   set quantity(int value) {
     _quantity = value;
   }
 
-  int get productId => _productId;
+  String get productId => _productId;
 
-  set productId(int value) {
+  set productId(String value) {
     _productId = value;
-  }
-
-  int get clientId => _clientId;
-
-  set clientId(int value) {
-    _clientId = value;
   }
 
   int get id => _id;
 
   set id(int value) {
     _id = value;
+  }
+
+  User get merchant => _merchant;
+
+  set merchant(User value) {
+    _merchant = value;
+  }
+
+  String get merchantId => _merchantId;
+
+  set merchantId(String value) {
+    _merchantId = value;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:storeapp/src/utils/constants.dart';
 
 class User {
-  int _id;
+  String _uid;
   String _name;
   String _email;
   String _password;
@@ -9,7 +9,7 @@ class User {
   String _personalImage;
 
   User({
-    int id,
+    String uid,
     String name,
     String email,
     String password,
@@ -17,7 +17,7 @@ class User {
     String personalImage,
   }) {
     this._email = email;
-    this._id = id;
+    this._uid = uid;
     this._name = name;
     this._password = password;
     this._personalImage = personalImage;
@@ -25,21 +25,21 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json[Constants.APP_DATABASE_FIELD_USERS_ID],
-        name: json[Constants.APP_DATABASE_FIELD_USERS_NAME],
-        email: json[Constants.APP_DATABASE_FIELD_USERS_EMAIL],
-        password: json[Constants.APP_DATABASE_FIELD_USERS_PASSWORD],
-        type: json[Constants.APP_DATABASE_FIELD_USERS_TYPE],
-        personalImage: json[Constants.APP_DATABASE_FIELD_USERS_PERSONAL_IMAGE],
+        uid: json[Constants.FIREBASE_USERS_FIELD_UID],
+        name: json[Constants.FIREBASE_USERS_FIELD_NAME],
+        email: json[Constants.FIREBASE_USERS_FIELD_EMAIL],
+        password: json[Constants.FIREBASE_USERS_FIELD_PASSWORD],
+        type: json[Constants.FIREBASE_USERS_FIELD_TYPE],
+        personalImage: json[Constants.FIREBASE_USERS_FIELD_PERSONAL_IMAGE],
       );
 
   Map<String, dynamic> toJson() => {
-//        Constants.APP_DATABASE_FIELD_USERS_ID: _id,
-        Constants.APP_DATABASE_FIELD_USERS_NAME: _name,
-        Constants.APP_DATABASE_FIELD_USERS_EMAIL: _email,
-        Constants.APP_DATABASE_FIELD_USERS_PASSWORD: _password,
-        Constants.APP_DATABASE_FIELD_USERS_TYPE: _type,
-        Constants.APP_DATABASE_FIELD_USERS_PERSONAL_IMAGE: _personalImage,
+//        Constants.FIREBASE_USERS_FIELD_UID: _uid,
+        Constants.FIREBASE_USERS_FIELD_NAME: _name,
+        Constants.FIREBASE_USERS_FIELD_EMAIL: _email,
+        Constants.FIREBASE_USERS_FIELD_PASSWORD: _password,
+        Constants.FIREBASE_USERS_FIELD_TYPE: _type,
+        Constants.FIREBASE_USERS_FIELD_PERSONAL_IMAGE: _personalImage,
       };
 
   String get personalImage => _personalImage;
@@ -72,9 +72,9 @@ class User {
     _name = value;
   }
 
-  int get id => _id;
+  String get uid => _uid;
 
-  set id(int value) {
-    _id = value;
+  set uid(String value) {
+    _uid = value;
   }
 }

@@ -2,20 +2,21 @@ import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class Address {
-  int _id;
+  String _id;
   String _name;
   int _streetNo;
   int _houseNo;
-  int _clientId;
+  String _clientId;
   String _country;
   String _city;
 
+  // Read Only
   User _client;
 
   Address({
-    int id,
+    String id,
     String name,
-    int clientId,
+    String clientId,
     int streetNo,
     int houseNo,
     String country,
@@ -31,23 +32,23 @@ class Address {
   }
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-        id: json[Constants.APP_DATABASE_FIELD_ADDRESSES_ID],
-        name: json[Constants.APP_DATABASE_FIELD_ADDRESSES_NAME],
-        clientId: json[Constants.APP_DATABASE_FIELD_ADDRESSES_CLIENT_ID],
-        city: json[Constants.APP_DATABASE_FIELD_ADDRESSES_CITY],
-        country: json[Constants.APP_DATABASE_FIELD_ADDRESSES_COUNTRY],
-        houseNo: json[Constants.APP_DATABASE_FIELD_ADDRESSES_HOUSE_NO],
-        streetNo: json[Constants.APP_DATABASE_FIELD_ADDRESSES_STREET_NO],
+        id: json[Constants.FIREBASE_ADDRESSES_FIELD_ID],
+        name: json[Constants.FIREBASE_ADDRESSES_FIELD_NAME],
+        clientId: json[Constants.FIREBASE_ADDRESSES_FIELD_CLIENT_ID],
+        city: json[Constants.FIREBASE_ADDRESSES_FIELD_CITY],
+        country: json[Constants.FIREBASE_ADDRESSES_FIELD_COUNTRY],
+        houseNo: json[Constants.FIREBASE_ADDRESSES_FIELD_HOUSE_NO],
+        streetNo: json[Constants.FIREBASE_ADDRESSES_FIELD_STREET_NO],
       );
 
   Map<String, dynamic> toJson() => {
-//        Constants.APP_DATABASE_FIELD_ADDRESSES_ID: _id,
-        Constants.APP_DATABASE_FIELD_ADDRESSES_NAME: _name,
-        Constants.APP_DATABASE_FIELD_ADDRESSES_COUNTRY: _country,
-        Constants.APP_DATABASE_FIELD_ADDRESSES_CITY: _city,
-        Constants.APP_DATABASE_FIELD_ADDRESSES_STREET_NO: _streetNo,
-        Constants.APP_DATABASE_FIELD_ADDRESSES_HOUSE_NO: _houseNo,
-        Constants.APP_DATABASE_FIELD_ADDRESSES_CLIENT_ID: _clientId,
+//        Constants.FIREBASE_ADDRESSES_FIELD_ID: _id,
+        Constants.FIREBASE_ADDRESSES_FIELD_NAME: _name,
+        Constants.FIREBASE_ADDRESSES_FIELD_COUNTRY: _country,
+        Constants.FIREBASE_ADDRESSES_FIELD_CITY: _city,
+        Constants.FIREBASE_ADDRESSES_FIELD_STREET_NO: _streetNo,
+        Constants.FIREBASE_ADDRESSES_FIELD_HOUSE_NO: _houseNo,
+        Constants.FIREBASE_ADDRESSES_FIELD_CLIENT_ID: _clientId,
       };
 
   String get city => _city;
@@ -62,9 +63,9 @@ class Address {
     _country = value;
   }
 
-  int get clientId => _clientId;
+  String get clientId => _clientId;
 
-  set clientId(int value) {
+  set clientId(String value) {
     _clientId = value;
   }
 
@@ -86,9 +87,9 @@ class Address {
     _name = value;
   }
 
-  int get id => _id;
+  String get id => _id;
 
-  set id(int value) {
+  set id(String value) {
     _id = value;
   }
 

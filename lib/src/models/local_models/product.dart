@@ -3,24 +3,25 @@ import 'package:storeapp/src/models/local_models/user.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class Product {
-  int _id;
+  String _id;
   String _name;
   double _price;
   String _image;
-  int _merchantId;
-  int _categoryId;
+  String _merchantId;
+  String _categoryId;
   String _description;
 
+  // Read Only
   User _merchant;
   Category _category;
 
   Product({
-    int id,
+    String id,
     String name,
     String description,
     double price,
-    int merchantId,
-    int categoryId,
+    String merchantId,
+    String categoryId,
     String image,
   }) {
     this._description = description;
@@ -33,23 +34,23 @@ class Product {
   }
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json[Constants.APP_DATABASE_FIELD_PRODUCTS_ID],
-        name: json[Constants.APP_DATABASE_FIELD_PRODUCTS_NAME],
-        price: json[Constants.APP_DATABASE_FIELD_PRODUCTS_PRICE],
-        description: json[Constants.APP_DATABASE_FIELD_PRODUCTS_DESCRIPTION],
-        image: json[Constants.APP_DATABASE_FIELD_PRODUCTS_IMAGE],
-        merchantId: json[Constants.APP_DATABASE_FIELD_PRODUCTS_MERCHANT_ID],
-        categoryId: json[Constants.APP_DATABASE_FIELD_PRODUCTS_CATEGORY_ID],
+        id: json[Constants.FIREBASE_PRODUCTS_FIELD_ID],
+        name: json[Constants.FIREBASE_PRODUCTS_FIELD_NAME],
+        price: json[Constants.FIREBASE_PRODUCTS_FIELD_PRICE],
+        description: json[Constants.FIREBASE_PRODUCTS_FIELD_DESCRIPTION],
+        image: json[Constants.FIREBASE_PRODUCTS_FIELD_IMAGE],
+        merchantId: json[Constants.FIREBASE_PRODUCTS_FIELD_MERCHANT_ID],
+        categoryId: json[Constants.FIREBASE_PRODUCTS_FIELD_CATEGORY_ID],
       );
 
   Map<String, dynamic> toJson() => {
-//        Constants.APP_DATABASE_FIELD_PRODUCTS_ID: _id,
-        Constants.APP_DATABASE_FIELD_PRODUCTS_NAME: _name,
-        Constants.APP_DATABASE_FIELD_PRODUCTS_PRICE: _price,
-        Constants.APP_DATABASE_FIELD_PRODUCTS_MERCHANT_ID: _merchantId,
-        Constants.APP_DATABASE_FIELD_PRODUCTS_DESCRIPTION: _description,
-        Constants.APP_DATABASE_FIELD_PRODUCTS_IMAGE: _image,
-        Constants.APP_DATABASE_FIELD_PRODUCTS_CATEGORY_ID: _categoryId,
+//        Constants.FIREBASE_PRODUCTS_FIELD_ID: _id,
+        Constants.FIREBASE_PRODUCTS_FIELD_NAME: _name,
+        Constants.FIREBASE_PRODUCTS_FIELD_PRICE: _price,
+        Constants.FIREBASE_PRODUCTS_FIELD_MERCHANT_ID: _merchantId,
+        Constants.FIREBASE_PRODUCTS_FIELD_DESCRIPTION: _description,
+        Constants.FIREBASE_PRODUCTS_FIELD_IMAGE: _image,
+        Constants.FIREBASE_PRODUCTS_FIELD_CATEGORY_ID: _categoryId,
       };
 
   String get description => _description;
@@ -58,9 +59,9 @@ class Product {
     _description = value;
   }
 
-  int get merchantId => _merchantId;
+  String get merchantId => _merchantId;
 
-  set merchantId(int value) {
+  set merchantId(String value) {
     _merchantId = value;
   }
 
@@ -82,9 +83,9 @@ class Product {
     _name = value;
   }
 
-  int get id => _id;
+  String get id => _id;
 
-  set id(int value) {
+  set id(String value) {
     _id = value;
   }
 
@@ -100,9 +101,9 @@ class Product {
     _category = value;
   }
 
-  int get categoryId => _categoryId;
+  String get categoryId => _categoryId;
 
-  set categoryId(int value) {
+  set categoryId(String value) {
     _categoryId = value;
   }
 }

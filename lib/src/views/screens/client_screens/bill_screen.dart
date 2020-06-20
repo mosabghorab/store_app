@@ -8,7 +8,6 @@ import 'package:storeapp/src/controllers/local_controllers/database_controllers/
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/order_details_controller.dart';
 import 'package:storeapp/src/models/local_models/cart_products.dart';
 import 'package:storeapp/src/models/local_models/order.dart';
-import 'package:storeapp/src/models/local_models/order_details.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/bill_screen_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';

@@ -1,11 +1,11 @@
 import 'package:storeapp/src/utils/constants.dart';
 
 class Category {
-  int _id;
+  String _id;
   String _name;
 
   Category({
-    int id,
+    String id,
     String name,
   }) {
     this._id = id;
@@ -13,12 +13,12 @@ class Category {
   }
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
-        id: json[Constants.APP_DATABASE_FIELD_CATEGORIES_ID],
-        name: json[Constants.APP_DATABASE_FIELD_CATEGORIES_NAME],
+        id: json[Constants.FIREBASE_CATEGORIES_FIELD_ID],
+        name: json[Constants.FIREBASE_CATEGORIES_FIELD_NAME],
       );
 
   Map<String, dynamic> toJson() => {
-        Constants.APP_DATABASE_FIELD_CATEGORIES_NAME: _name,
+        Constants.FIREBASE_CATEGORIES_FIELD_NAME: _name,
       };
 
   String get name => _name;
@@ -27,9 +27,9 @@ class Category {
     _name = value;
   }
 
-  int get id => _id;
+  String get id => _id;
 
-  set id(int value) {
+  set id(String value) {
     _id = value;
   }
 }
