@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/addresses_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/order_product_controller.dart';
 import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/user_controller.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/addresses_controller.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/product_controller.dart';
 import 'package:storeapp/src/models/local_models/order.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
@@ -9,14 +9,14 @@ class OrderController {
   static OrderController _instance;
   UserController _userController;
   AddressController _addressController;
-  ProductController _productController;
+  OrderProductController _orderProductController;
   CollectionReference _orderReference;
 
   //||... private constructor ...||
   OrderController._() {
     _userController = UserController.instance;
     _addressController = AddressController.instance;
-    _productController = ProductController.instance;
+    _orderProductController = OrderProductController.instance;
     _orderReference =
         Firestore.instance.collection(Constants.FIREBASE_COLLECTIONS_ORDERS);
   }
@@ -40,6 +40,13 @@ class OrderController {
     List<Order> orders = querySnapshot.documents
         .map((o) => Order.fromJson(o.data)..id = o.documentID)
         .toList();
-    orders.forEach((element) { })
+    orders.forEach((o) async {
+      o.client = await _userController.getUser(o.clientId);
+      o.address = await _addressController.getAddress(o.addressId);
+      o.merchant = await _userController.getUser(o.merchantId);
+      o.orderProducts =
+          await _orderProductController.getAllOrderProductsForOrder(o.id);
+    });
+    return orders;
   }
 }

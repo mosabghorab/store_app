@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/auth_controller.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
@@ -17,13 +17,13 @@ class DashboardScreenBody extends StatefulWidget {
 }
 
 class _DashboardScreenBodyState extends State<DashboardScreenBody> {
-  UserController _userController;
+  AuthController _authController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _userController = UserController.instance;
+    _authController = AuthController.instance;
   }
 
   @override
@@ -39,7 +39,7 @@ class _DashboardScreenBodyState extends State<DashboardScreenBody> {
               color: Colors.red,
             ),
             onPressed: () {
-              _userController.logoutUser();
+              _authController.signOut();
               Navigator.pushReplacementNamed(
                   context, Constants.SCREENS_SPLASH_SCREEN);
             },
@@ -109,40 +109,6 @@ class _DashboardScreenBodyState extends State<DashboardScreenBody> {
                           )
                         ],
                       ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(
-                        context, Constants.SCREENS_CATEGORIES_SCREEN);
-                  },
-                  child: Container(
-                    height: AppShared.screenUtil.setHeight(700),
-                    width: 250,
-                    padding: AppStyles.defaultPadding4,
-                    margin: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Text('Categories'),
-                        Image.asset(
-                          '${Constants.ASSETS_IMAGES_PATH}categories.png',
-                          width: 150,
-                          height: 150,
-                        )
-                      ],
                     ),
                   ),
                 ),

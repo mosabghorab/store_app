@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/category_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/category_controller.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/product_controller.dart';
 import 'package:storeapp/src/models/local_models/category.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/pages_notifiers/home_page_notifiers.dart';

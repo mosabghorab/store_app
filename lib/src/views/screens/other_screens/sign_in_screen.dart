@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/auth_controller.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/other_screens_notifiers/sign_in_screen_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
@@ -29,7 +29,7 @@ class SignInScreenBody extends StatefulWidget {
 class _SignInScreenBodyState extends State<SignInScreenBody> {
   GlobalKey<FormState> _formKey;
   SignInScreenNotifiers _signInScreenNotifiers;
-  UserController _userController;
+  AuthController _authController;
 
   String _email;
   String _password;
@@ -39,34 +39,29 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
     // TODO: implement initState
     super.initState();
     _formKey = GlobalKey();
-    _userController = UserController.instance;
+    _authController = AuthController.instance;
     _signInScreenNotifiers =
         Provider.of<SignInScreenNotifiers>(context, listen: false);
   }
 
   // ||.. sign in ..||
-  Future<void> _login() async {
+  Future<void> _signInWithEmailAndPassword() async {
     if (!_formKey.currentState.validate()) return;
     _formKey.currentState.save();
     try {
       _signInScreenNotifiers.isLoading = true;
-      AppShared.currentUser = await _userController.loginUser(
+      await _authController.signInWithEmailAndPassword(
           _email, _password, _signInScreenNotifiers.isRememberMe);
       _signInScreenNotifiers.isLoading = false;
-      if (AppShared.currentUser == null)
-        Helpers.showMessage('User not found', MessageType.MESSAGE_FAILED);
-      else {
-        if (AppShared.currentUser.type ==
-            Helpers.getUserType(UserType.USER_TYPE_MERCHANT))
-          Navigator.pushReplacementNamed(
-              context, Constants.SCREENS_DASHBOARD_SCREEN);
-        else
-          Navigator.pushReplacementNamed(
-              context, Constants.SCREENS_HOME_SCREEN);
-      }
+      if (AppShared.currentUser.type ==
+          Helpers.getUserType(UserType.USER_TYPE_MERCHANT))
+        Navigator.pushReplacementNamed(
+            context, Constants.SCREENS_DASHBOARD_SCREEN);
+      else
+        Navigator.pushReplacementNamed(context, Constants.SCREENS_HOME_SCREEN);
     } catch (error) {
       _signInScreenNotifiers.isLoading = false;
-      Helpers.showMessage(error.toString(), MessageType.MESSAGE_FAILED);
+      Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
     }
   }
 
@@ -210,7 +205,7 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
                         style: BorderStyle.none,
                       ),
                     ),
-                    onPressed: _login,
+                    onPressed: _signInWithEmailAndPassword,
                     color: Colors.blue,
                     child: Text(
                       AppShared.appLang['Login'],

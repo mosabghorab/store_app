@@ -21,8 +21,12 @@ class CategoryController {
 //       ------------------ || .. usable  methods ..|| ----------------------
 
   //get all Categories.
-  Stream<QuerySnapshot> getAllCategories() {
-    return _categoriesReference.snapshots();
+  Future<List<Category>> getAllCategories() async {
+    QuerySnapshot querySnapshot = await _categoriesReference.getDocuments();
+    return querySnapshot.documents
+        .map<Category>((document) =>
+            Category.fromJson(document.data)..id = document.documentID)
+        .toList();
   }
 
   //get Category.

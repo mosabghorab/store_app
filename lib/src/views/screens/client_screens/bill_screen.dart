@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/addresses_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/addresses_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/order_controller.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/cart_product_controller.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/order_controller.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/order_details_controller.dart';
 import 'package:storeapp/src/models/local_models/cart_products.dart';
 import 'package:storeapp/src/models/local_models/order.dart';

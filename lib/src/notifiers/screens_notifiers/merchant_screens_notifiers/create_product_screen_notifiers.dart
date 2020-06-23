@@ -7,7 +7,7 @@ class CreateProductScreenNotifiers with ChangeNotifier {
   List<c.Category> _categories = [];
   bool _isLoading = true;
   File _image;
-  int _categoryId = 1;
+  String _categoryId;
 
   bool get isLoading => _isLoading;
 
@@ -29,9 +29,9 @@ class CreateProductScreenNotifiers with ChangeNotifier {
     _categories = value;
   }
 
-  int get categoryId => _categoryId;
+  String get categoryId => _categoryId;
 
-  set categoryId(int value) {
+  set categoryId(String value) {
     _categoryId = value;
     notifyListeners();
   }

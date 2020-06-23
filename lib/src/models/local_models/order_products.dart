@@ -1,7 +1,7 @@
 import 'package:storeapp/src/models/local_models/product.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
-class OrderProducts {
+class OrderProduct {
   String _id;
   int _quantity;
   String _productId;
@@ -9,7 +9,7 @@ class OrderProducts {
   //Read Only
   Product _product;
 
-  OrderProducts({
+  OrderProduct({
     String id,
     int quantity,
     String productId,
@@ -19,7 +19,7 @@ class OrderProducts {
     this._quantity = quantity;
   }
 
-  factory OrderProducts.fromJson(Map<String, dynamic> json) => OrderProducts(
+  factory OrderProduct.fromJson(Map<String, dynamic> json) => OrderProduct(
         id: json[Constants.FIREBASE_OrderProducts_FIELD_ID],
         quantity: json[Constants.FIREBASE_OrderProducts_FIELD_QUANTITY],
         productId: json[Constants.FIREBASE_OrderProducts_FIELD_PRODUCT_ID],

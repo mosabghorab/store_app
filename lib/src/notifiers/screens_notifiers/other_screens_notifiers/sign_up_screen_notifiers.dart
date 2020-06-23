@@ -7,6 +7,7 @@ class SignUpScreenNotifiers with ChangeNotifier {
   bool _isLoading = false;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  int _userType = 1;
 
   File get personalImage => _personalImage;
 
@@ -33,6 +34,13 @@ class SignUpScreenNotifiers with ChangeNotifier {
 
   set isPasswordVisible(bool value) {
     _isPasswordVisible = value;
+    notifyListeners();
+  }
+
+  int get userType => _userType;
+
+  set userType(int value) {
+    _userType = value;
     notifyListeners();
   }
 }

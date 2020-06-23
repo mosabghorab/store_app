@@ -9,7 +9,6 @@ class Constants {
 // start : ||... SCREENS_NAMES ...||
   //< Merchant Screens >
   static const String SCREENS_DASHBOARD_SCREEN = 'DashboardScreen';
-  static const String SCREENS_CATEGORIES_SCREEN = 'CategoriesScreen';
   static const String SCREENS_PRODUCTS_SCREEN = 'ProductsScreen';
   static const String SCREENS_CREATE_PRODUCT_SCREEN = 'CreateProductScreen';
   static const String SCREENS_ORDERS_SCREEN = 'OrdersScreen';
@@ -181,8 +180,12 @@ class Constants {
   //end:|. FIELDS .|
 
   // start |. STORAGE .|
-
-  // end |. STORAGE .|
+  static const String FIREBASE_STORAGE_IMAGES_BASE_PATH = 'images/';
+  static const String FIREBASE_STORAGE_USERS_IMAGES_PATH =
+      '${FIREBASE_STORAGE_IMAGES_BASE_PATH}users/';
+  static const String FIREBASE_STORAGE_PRODUCTS_IMAGES_PATH =
+      '${FIREBASE_STORAGE_IMAGES_BASE_PATH}products/';
+// end |. STORAGE .|
 
 // end : ||... FIREBASE ...||
 

@@ -1,4 +1,4 @@
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/product_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/product_controller.dart';
 import 'package:storeapp/src/models/local_models/cart_products.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';

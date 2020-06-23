@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/order_controller.dart';
-import 'package:storeapp/src/models/local_models/order.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/order_controller.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/merchant_screens_notifiers/orders_screen_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
+import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/enums.dart';
 import 'package:storeapp/src/utils/helpers.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
@@ -43,33 +43,34 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
   }
 
   void _init() async {
-    _ordersScreenNotifiers.orders = await _orderController.getAllOrders();
+    _ordersScreenNotifiers.orders =
+        await _orderController.getOrdersForClient(AppShared.currentUser.uid);
     _ordersScreenNotifiers.isLoading = false;
   }
 
-  void _updateOrder(int id, int index, int status) async {
-    _ordersScreenNotifiers.isLoading = true;
-    try {
-      int result = await _orderController.updateOrder(
-        id,
-        Order(
-          clientId: _ordersScreenNotifiers.orders[index].clientId,
-          status: status,
-          date: _ordersScreenNotifiers.orders[index].date,
-          addressId: _ordersScreenNotifiers.orders[index].addressId,
-        ),
-      );
-      _ordersScreenNotifiers.orders = await _orderController.getAllOrders();
-      _ordersScreenNotifiers.isLoading = false;
-      if (result > 0)
-        Helpers.showMessage(
-            'Order updated successfully', MessageType.MESSAGE_SUCCESS);
-      else
-        Helpers.showMessage('Operation failed', MessageType.MESSAGE_FAILED);
-    } catch (error) {
-      _ordersScreenNotifiers.isLoading = false;
-      Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
-    }
+  void _updateOrder(String id, int index, int status) async {
+//    _ordersScreenNotifiers.isLoading = true;
+//    try {
+//      int result = await _orderController.updateOrder(
+//        id,
+//        Order(
+//          clientId: _ordersScreenNotifiers.orders[index].clientId,
+//          status: status,
+//          date: _ordersScreenNotifiers.orders[index].date,
+//          addressId: _ordersScreenNotifiers.orders[index].addressId,
+//        ),
+//      );
+//      _ordersScreenNotifiers.orders = await _orderController.getAllOrders();
+//      _ordersScreenNotifiers.isLoading = false;
+//      if (result > 0)
+//        Helpers.showMessage(
+//            'Order updated successfully', MessageType.MESSAGE_SUCCESS);
+//      else
+//        Helpers.showMessage('Operation failed', MessageType.MESSAGE_FAILED);
+//    } catch (error) {
+//      _ordersScreenNotifiers.isLoading = false;
+//      Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
+//    }
   }
 
   @override
@@ -255,9 +256,7 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
                                   Container(
                                     child: ListView.builder(
                                       itemCount: _ordersScreenNotifiers
-                                          .orders[index1]
-                                          .orderDetailsList
-                                          .length,
+                                          .orders[index1].orderProducts.length,
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
                                       itemBuilder: (_, index2) => ListTile(
@@ -265,8 +264,7 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
                                           children: <Widget>[
                                             _ordersScreenNotifiers
                                                         .orders[index1]
-                                                        .orderDetailsList[
-                                                            index2]
+                                                        .orderProducts[index2]
                                                         .product
                                                         .image ==
                                                     null
@@ -288,7 +286,7 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
                                                         base64Decode(
                                                             _ordersScreenNotifiers
                                                                 .orders[index1]
-                                                                .orderDetailsList[
+                                                                .orderProducts[
                                                                     index2]
                                                                 .product
                                                                 .image),
@@ -311,8 +309,7 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
                                                     Text(
                                                       _ordersScreenNotifiers
                                                           .orders[index1]
-                                                          .orderDetailsList[
-                                                              index2]
+                                                          .orderProducts[index2]
                                                           .product
                                                           .name,
                                                       style: TextStyle(
@@ -320,7 +317,7 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "\$${_ordersScreenNotifiers.orders[index1].orderDetailsList[index2].product.price}",
+                                                      "\$${_ordersScreenNotifiers.orders[index1].orderProducts[index2].product.price}",
                                                       style: TextStyle(
                                                         fontSize: 16,
                                                         color: Colors.blue,
@@ -336,7 +333,7 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
                                                         vertical: 2,
                                                       ),
                                                       child: Text(
-                                                          "${_ordersScreenNotifiers.orders[index1].orderDetailsList[index2].product.category.name} "),
+                                                          "${_ordersScreenNotifiers.orders[index1].orderProducts[index2].product.category.name} "),
                                                     ),
                                                     SizedBox(
                                                       height: 5,

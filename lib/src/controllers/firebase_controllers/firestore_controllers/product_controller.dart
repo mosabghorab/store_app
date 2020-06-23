@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/category_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/category_controller.dart';
 import 'package:storeapp/src/models/local_models/product.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
@@ -53,6 +53,17 @@ class ProductController {
           await _categoryController.getCategory(product.categoryId);
     });
     return products;
+  }
+
+  // get product .
+  Future<Product> getProduct(String id) async {
+    DocumentSnapshot documentSnapshot =
+        await _productsReference.document(id).get();
+    Product product = Product.fromJson(documentSnapshot.data)
+      ..id = documentSnapshot.documentID;
+    product.category =
+        await _categoryController.getCategory(product.categoryId);
+    return product;
   }
 
   //delete Product.

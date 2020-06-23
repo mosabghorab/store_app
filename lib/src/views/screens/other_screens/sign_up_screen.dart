@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
-import 'package:storeapp/src/models/local_models/user.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/auth_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/storage_controller.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/other_screens_notifiers/sign_up_screen_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
@@ -36,13 +35,13 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
   GlobalKey<FormState> _formKey;
   GlobalKey<ScaffoldState> _scaffoldKey;
   SignUpScreenNotifiers _signUpScreenNotifiers;
-  UserController _userController;
+  AuthController _authController;
+  StorageController _storageController;
 
   String _name;
   String _email;
   String _password;
   String _confirmPassword;
-  String _personalImageAsBase64String;
 
   @override
   void initState() {
@@ -50,7 +49,7 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
     super.initState();
     _formKey = GlobalKey();
     _scaffoldKey = GlobalKey();
-    _userController = UserController.instance;
+    _authController = AuthController.instance;
     _signUpScreenNotifiers =
         Provider.of<SignUpScreenNotifiers>(context, listen: false);
   }
@@ -77,30 +76,32 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
         return;
       }
       _signUpScreenNotifiers.isLoading = true;
-      _personalImageAsBase64String =
-          base64Encode(_signUpScreenNotifiers.personalImage.readAsBytesSync());
-      int result = await _userController.createUser(
-        User(
-          email: _email,
-          password: _password,
-          name: _name,
-          personalImage: _personalImageAsBase64String,
-          type: Helpers.getUserType(UserType.USER_TYPE_CLIENT),
-        ),
-      );
+      String _personalImagePath;
+      if (_signUpScreenNotifiers.personalImage != null) {
+        _personalImagePath = await _storageController.uploadFile(
+          '${Constants.FIREBASE_STORAGE_USERS_IMAGES_PATH}${_name}_${DateTime.now().millisecondsSinceEpoch}',
+          _signUpScreenNotifiers.personalImage,
+        );
+      }
+      await _authController.createUserWithEmailAndPassword(_email, _password,
+          _name, _personalImagePath, _signUpScreenNotifiers.userType);
       _signUpScreenNotifiers.isLoading = false;
-      if (result < 0) {
-        Helpers.showMessage('Failed!!', MessageType.MESSAGE_FAILED);
-      } else {
+      if (_signUpScreenNotifiers.userType ==
+          Helpers.getUserType(UserType.USER_TYPE_MERCHANT))
         Navigator.pushNamedAndRemoveUntil(
           context,
           Constants.SCREENS_HOME_SCREEN,
           (_) => false,
         );
-      }
+      else
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Constants.SCREENS_DASHBOARD_SCREEN,
+          (_) => false,
+        );
     } catch (error) {
       _signUpScreenNotifiers.isLoading = false;
-      Helpers.showMessage(error.toString(), MessageType.MESSAGE_FAILED);
+      Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
       throw error;
     }
   }

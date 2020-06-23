@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/product_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/product_controller.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/merchant_screens_notifiers/products_screen_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/constants.dart';
@@ -32,11 +30,6 @@ class _ProductsScreenBodyState extends State<ProductsScreenBody> {
   ProductsScreenNotifiers _productsScreenNotifiers;
   ProductController _productController;
 
-  String _productName;
-  String _description;
-  String _image;
-  double _price;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -57,16 +50,13 @@ class _ProductsScreenBodyState extends State<ProductsScreenBody> {
     Navigator.pop(context);
     _productsScreenNotifiers.isLoading = true;
     try {
-      int result = await _productController
+      await _productController
           .deleteProduct(_productsScreenNotifiers.products[index].id);
       _productsScreenNotifiers.products =
           await _productController.getAllProducts();
       _productsScreenNotifiers.isLoading = false;
-      if (result > 0)
-        Helpers.showMessage(
-            'Product deleted successfully', MessageType.MESSAGE_SUCCESS);
-      else
-        Helpers.showMessage('Operation failed', MessageType.MESSAGE_FAILED);
+      Helpers.showMessage(
+          'Product deleted successfully', MessageType.MESSAGE_SUCCESS);
     } catch (error) {
       _productsScreenNotifiers.isLoading = false;
       Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
@@ -128,10 +118,9 @@ class _ProductsScreenBodyState extends State<ProductsScreenBody> {
                                         child: ClipRRect(
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(10)),
-                                          child: Image.memory(
-                                            base64Decode(
-                                                _productsScreenNotifiers
-                                                    .products[index].image),
+                                          child: Image.network(
+                                            _productsScreenNotifiers
+                                                .products[index].image,
                                             fit: BoxFit.fill,
                                           ),
                                         ),

@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
-import 'package:storeapp/src/models/local_models/user.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/auth_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/user_controller.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
 import 'package:storeapp/src/utils/enums.dart';
@@ -26,6 +27,7 @@ class SplashScreenBody extends StatefulWidget {
 
 class _SplashScreenBodyState extends State<SplashScreenBody> {
   UserController _userController;
+  AuthController _authController;
 
   @override
   void initState() {
@@ -33,35 +35,25 @@ class _SplashScreenBodyState extends State<SplashScreenBody> {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _userController = UserController.instance;
+    _authController = AuthController.instance;
     _route();
   }
 
   void _route() async {
     await Future.delayed(Duration(seconds: 2));
-    if (AppShared.sharedPreferencesController.getIsLogin()) {
+    FirebaseUser currentUser = await _authController.getCurrentUser();
+    if (currentUser != null) {
       if (AppShared.sharedPreferencesController.isRememberedUser()) {
-        int id = AppShared.sharedPreferencesController.getUserId();
-        if (id != -5) {
-          if (id == -1) {
-            Navigator.pushReplacementNamed(
-                context, Constants.SCREENS_SIGN_IN_SCREEN);
-          } else {
-            AppShared.currentUser = await _userController.getUser(id);
-            Navigator.pushReplacementNamed(
-                context, Constants.SCREENS_HOME_SCREEN);
-          }
-        } else {
-          AppShared.currentUser = User(
-              id: -5,
-              name: 'Merchant',
-              email: 'merchant@gmail.com',
-              password: 'merchant',
-              type: Helpers.getUserType(UserType.USER_TYPE_MERCHANT));
+        AppShared.currentUser = await _userController.getUser(currentUser.uid);
+        if (AppShared.currentUser.type ==
+            Helpers.getUserType(UserType.USER_TYPE_CLIENT))
+          Navigator.pushReplacementNamed(
+              context, Constants.SCREENS_HOME_SCREEN);
+        else
           Navigator.pushReplacementNamed(
               context, Constants.SCREENS_DASHBOARD_SCREEN);
-        }
       } else {
-        _userController.logoutUser();
+        _authController.signOut();
         Navigator.pushReplacementNamed(
             context, Constants.SCREENS_SIGN_IN_SCREEN);
       }

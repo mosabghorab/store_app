@@ -1,15 +1,16 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/category_controller.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/product_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/category_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/product_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/storage_controller.dart';
 import 'package:storeapp/src/models/local_models/product.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/merchant_screens_notifiers/create_product_screen_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
+import 'package:storeapp/src/utils/constants.dart';
 import 'package:storeapp/src/utils/enums.dart';
 import 'package:storeapp/src/utils/helpers.dart';
 import 'package:storeapp/src/views/components/parent_component.dart';
@@ -38,6 +39,7 @@ class _CreateProductScreenBodyState extends State<CreateProductScreenBody> {
   CreateProductScreenNotifiers _createProductScreenNotifiers;
   ProductController _productController;
   CategoryController _categoryController;
+  StorageController _storageController;
   GlobalKey<FormState> _createProductFormState;
   GlobalKey<ScaffoldState> _scaffoldKey;
 
@@ -54,6 +56,7 @@ class _CreateProductScreenBodyState extends State<CreateProductScreenBody> {
     _scaffoldKey = GlobalKey();
     _productController = ProductController.instance;
     _categoryController = CategoryController.instance;
+    _storageController = StorageController.instance;
     _createProductScreenNotifiers =
         Provider.of<CreateProductScreenNotifiers>(context, listen: false);
     _init();
@@ -71,25 +74,24 @@ class _CreateProductScreenBodyState extends State<CreateProductScreenBody> {
     _createProductScreenNotifiers.isLoading = true;
     try {
       if (_createProductScreenNotifiers.image != null)
-        _image =
-            base64Encode(_createProductScreenNotifiers.image.readAsBytesSync());
-      int result = await _productController.createProduct(
+        _image = await _storageController.uploadFile(
+          '${Constants.FIREBASE_STORAGE_USERS_IMAGES_PATH}${_productName}_${DateTime.now().millisecondsSinceEpoch}',
+          _createProductScreenNotifiers.image,
+        );
+      await _productController.createProduct(
         Product(
           name: _productName,
           categoryId: _createProductScreenNotifiers.categoryId,
           description: _description,
-          merchantId: AppShared.currentUser.type,
+          merchantId: AppShared.currentUser.uid,
           image: _image,
           price: _price,
         ),
       );
       _createProductScreenNotifiers.isLoading = false;
-      if (result > 0) {
-        Helpers.showMessage(
-            'Product created successfully', MessageType.MESSAGE_SUCCESS);
-        Navigator.pop(context);
-      } else
-        Helpers.showMessage('Operation failed', MessageType.MESSAGE_FAILED);
+      Helpers.showMessage(
+          'Product created successfully', MessageType.MESSAGE_SUCCESS);
+      Navigator.pop(context);
     } catch (error) {
       _createProductScreenNotifiers.isLoading = false;
       Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);
@@ -230,7 +232,8 @@ class _CreateProductScreenBodyState extends State<CreateProductScreenBody> {
                                       _description = value;
                                     },
                                   ),
-                                  Selector<CreateProductScreenNotifiers, int>(
+                                  Selector<CreateProductScreenNotifiers,
+                                      String>(
                                     selector: (_, value) => value.categoryId,
                                     builder: (_, categoryId, __) =>
                                         DropdownButtonFormField(

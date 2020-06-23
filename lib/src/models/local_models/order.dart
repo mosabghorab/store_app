@@ -10,7 +10,7 @@ class Order {
   String _addressId;
   int _status;
   int _date;
-  List<OrderProducts> _orderProducts;
+  List<OrderProduct> _orderProducts;
 
   // Read Only
   User _client;
@@ -93,9 +93,9 @@ class Order {
     _addressId = value;
   }
 
-  List<OrderProducts> get orderProducts => _orderProducts;
+  List<OrderProduct> get orderProducts => _orderProducts;
 
-  set orderProducts(List<OrderProducts> value) {
+  set orderProducts(List<OrderProduct> value) {
     _orderProducts = value;
   }
 
