@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storeapp/src/models/local_models/category.dart';
-import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class CategoryController {
   static CategoryController _instance;
+  CollectionReference _categoriesReference;
 
   //||... private constructor ...||
-  CategoryController._();
+  CategoryController._() {
+    _categoriesReference = Firestore.instance
+        .collection(Constants.FIREBASE_COLLECTIONS_CATEGORIES);
+  }
 
   // ||.. singleton pattern ..||
   static CategoryController get instance {
@@ -16,45 +20,16 @@ class CategoryController {
 
 //       ------------------ || .. usable  methods ..|| ----------------------
 
-  //create new Category.
-  Future<int> createCategory(Category category) async {
-    return await AppShared.db
-        .insert(Constants.APP_DATABASE_TABLE_CATEGORIES, category.toJson());
-  }
-
   //get all Categories.
-  Future<List<Category>> getAllCategories() async {
-    List<Map> categories = await AppShared.db
-        .rawQuery('SELECT * FROM ${Constants.APP_DATABASE_TABLE_CATEGORIES}');
-    return categories
-        .map<Category>((value) => Category.fromJson(value))
-        .toList();
+  Stream<QuerySnapshot> getAllCategories() {
+    return _categoriesReference.snapshots();
   }
 
   //get Category.
-  Future<Category> getCategory(int id) async {
-    List<Map> categories = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_CATEGORIES} where id=?',
-        [id]);
-    return Category.fromJson(categories[0]);
-  }
-
-  //delete Category.
-  Future<int> deleteCategory(int id) async {
-    return await AppShared.db.delete(
-      Constants.APP_DATABASE_TABLE_CATEGORIES,
-      where: 'id=?',
-      whereArgs: [id],
-    );
-  }
-
-  //update Category.
-  Future<int> updateCategory(int id, Category category) async {
-    return await AppShared.db.update(
-      Constants.APP_DATABASE_TABLE_CATEGORIES,
-      category.toJson(),
-      where: 'id=?',
-      whereArgs: [id],
-    );
+  Future<Category> getCategory(String id) async {
+    DocumentSnapshot documentSnapshot =
+        await _categoriesReference.document(id).get();
+    return Category.fromJson(documentSnapshot.data)
+      ..id = documentSnapshot.documentID;
   }
 }

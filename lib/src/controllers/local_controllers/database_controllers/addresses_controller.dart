@@ -1,15 +1,15 @@
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/category_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storeapp/src/models/local_models/address.dart';
-import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class AddressController {
   static AddressController _instance;
-  CategoryController _categoryController;
+  CollectionReference _addressesReference;
 
   //||... private constructor ...||
   AddressController._() {
-    _categoryController = CategoryController.instance;
+    _addressesReference =
+        Firestore.instance.collection(Constants.FIREBASE_COLLECTIONS_ADDRESSES);
   }
 
   // ||.. singleton pattern ..||
@@ -20,46 +20,24 @@ class AddressController {
 
 //       ------------------ || .. usable  methods ..|| ----------------------
 
-  //create new Address.
-  Future<int> createAddress(Address address) async {
-    return await AppShared.db
-        .insert(Constants.APP_DATABASE_TABLE_ADDRESSES, address.toJson());
+  // Create new address for a user.
+  Future<void> createAddress(Address address) async {
+    return await _addressesReference.document().setData(address.toJson());
   }
 
-  //get all Addresses.
-  Future<List<Address>> getAllAddresses(int clientId) async {
-    List<Map> addressesJson = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_ADDRESSES} where clientId=?',
-        [clientId]);
-    return addressesJson
-        .map<Address>((value) => Address.fromJson(value))
-        .toList();
+  // get all addresses for a user.
+  Stream<QuerySnapshot> getAddressesForUser(String clientId) {
+    return _addressesReference
+        .where(Constants.FIREBASE_ADDRESSES_FIELD_CLIENT_ID,
+            isEqualTo: clientId)
+        .snapshots();
   }
 
-  //get all Addresses.
-  Future<Address> getAddress(int id) async {
-    List<Map> addressesJson = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_ADDRESSES} where id=?',
-        [id]);
-    return Address.fromJson(addressesJson[0]);
-  }
-
-  //delete Address.
-  Future<int> deleteAddress(int id) async {
-    return await AppShared.db.delete(
-      Constants.APP_DATABASE_TABLE_ADDRESSES,
-      where: 'id=?',
-      whereArgs: [id],
-    );
-  }
-
-  //update Address.
-  Future<int> updateAddress(int id, Address address) async {
-    return await AppShared.db.update(
-      Constants.APP_DATABASE_TABLE_ADDRESSES,
-      address.toJson(),
-      where: 'id=?',
-      whereArgs: [id],
-    );
+  // get an address.
+  Future<Address> getAddress(String id) async {
+    DocumentSnapshot documentSnapshot =
+        await _addressesReference.document(id).get();
+    return Address.fromJson(documentSnapshot.data)
+      ..id = documentSnapshot.documentID;
   }
 }

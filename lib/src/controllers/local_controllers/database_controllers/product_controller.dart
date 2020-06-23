@@ -1,15 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/category_controller.dart';
 import 'package:storeapp/src/models/local_models/product.dart';
-import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class ProductController {
   static ProductController _instance;
   CategoryController _categoryController;
+  CollectionReference _productsReference;
 
   //||... private constructor ...||
   ProductController._() {
     _categoryController = CategoryController.instance;
+    _productsReference =
+        Firestore.instance.collection(Constants.FIREBASE_COLLECTIONS_PRODUCTS);
   }
 
   // ||.. singleton pattern ..||
@@ -21,66 +24,39 @@ class ProductController {
 //       ------------------ || .. usable  methods ..|| ----------------------
 
   //create new Product.
-  Future<int> createProduct(Product product) async {
-    return await AppShared.db
-        .insert(Constants.APP_DATABASE_TABLE_PRODUCTS, product.toJson());
+  Future<void> createProduct(Product product) async {
+    await _productsReference.document().setData(product.toJson());
   }
 
   //get all Products.
   Future<List<Product>> getAllProducts() async {
-    List<Map> productsJson = await AppShared.db
-        .rawQuery('SELECT * FROM ${Constants.APP_DATABASE_TABLE_PRODUCTS}');
-    print(productsJson.toString());
-    List<Product> products =
-        productsJson.map<Product>((value) => Product.fromJson(value)).toList();
-    for (int i = 0; i < products.length; i++) {
-      products[i].category =
-          await _categoryController.getCategory(productsJson[i]['categoryId']);
-    }
+    QuerySnapshot querySnapshot = await _productsReference.getDocuments();
+    List<Product> products = querySnapshot.documents
+        .map<Product>((p) => Product.fromJson(p.data)..id = p.documentID);
+    products.forEach((product) async {
+      product.category =
+          await _categoryController.getCategory(product.categoryId);
+    });
     return products;
   }
 
   //get Products by category.
-  Future<List<Product>> getProductsByCategory(int categoryId) async {
-    List<Map> productsJson = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_PRODUCTS} where categoryId = ?',
-        [categoryId]);
-    List<Product> products =
-        productsJson.map<Product>((value) => Product.fromJson(value)).toList();
-    for (int i = 0; i < products.length; i++) {
-      products[i].category =
-          await _categoryController.getCategory(products[i].categoryId);
-    }
+  Future<List<Product>> getAllProductsByCategory(String categoryId) async {
+    QuerySnapshot querySnapshot = await _productsReference
+        .where(Constants.FIREBASE_PRODUCTS_FIELD_CATEGORY_ID,
+            isEqualTo: categoryId)
+        .getDocuments();
+    List<Product> products = querySnapshot.documents
+        .map<Product>((p) => Product.fromJson(p.data)..id = p.documentID);
+    products.forEach((product) async {
+      product.category =
+          await _categoryController.getCategory(product.categoryId);
+    });
     return products;
   }
 
-  //get all Products.
-  Future<Product> getProduct(int id) async {
-    List<Map> productsJson = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_PRODUCTS} where id=?',
-        [id]);
-    Product product = Product.fromJson(productsJson[0]);
-    product.category =
-        await _categoryController.getCategory(product.categoryId);
-    return product;
-  }
-
   //delete Product.
-  Future<int> deleteProduct(int id) async {
-    return await AppShared.db.delete(
-      Constants.APP_DATABASE_TABLE_PRODUCTS,
-      where: 'id=?',
-      whereArgs: [id],
-    );
-  }
-
-  //update Product.
-  Future<int> updateProduct(int id, Product product) async {
-    return await AppShared.db.update(
-      Constants.APP_DATABASE_TABLE_CATEGORIES,
-      product.toJson(),
-      where: 'id=?',
-      whereArgs: [id],
-    );
+  Future<void> deleteProduct(String id) async {
+    await _productsReference.document(id).delete();
   }
 }

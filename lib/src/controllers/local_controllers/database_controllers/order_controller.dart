@@ -1,21 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/user_controller.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/addresses_controller.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/order_details_controller.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
+import 'package:storeapp/src/controllers/local_controllers/database_controllers/product_controller.dart';
 import 'package:storeapp/src/models/local_models/order.dart';
-import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
 
 class OrderController {
   static OrderController _instance;
   UserController _userController;
   AddressController _addressController;
-  OrderDetailsController _orderDetailsController;
+  ProductController _productController;
+  CollectionReference _orderReference;
 
   //||... private constructor ...||
   OrderController._() {
     _userController = UserController.instance;
     _addressController = AddressController.instance;
-    _orderDetailsController = OrderDetailsController.instance;
+    _productController = ProductController.instance;
+    _orderReference =
+        Firestore.instance.collection(Constants.FIREBASE_COLLECTIONS_ORDERS);
   }
 
   // ||.. singleton pattern ..||
@@ -26,61 +29,17 @@ class OrderController {
 
 //       ------------------ || .. usable  methods ..|| ----------------------
 
-  //create new Cart Product.
-  Future<int> createOrder(Order order) async {
-    return await AppShared.db
-        .insert(Constants.APP_DATABASE_TABLE_ORDERS, order.toJson());
+  Future<void> createOrder(Order order) {
+    return _orderReference.document().setData(order.toJson());
   }
 
-  //get all Cart Products.
-  Future<List<Order>> getAllOrdersByClientId(int clientId) async {
-    List<Map> ordersJson = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_ORDERS} where clientId=? order by id desc',
-        [clientId]);
-    List<Order> orders =
-        ordersJson.map<Order>((value) => Order.fromJson(value)).toList();
-    for (int i = 0; i < orders.length; i++) {
-      orders[i].client = await _userController.getUser(orders[i].clientId);
-      orders[i].address =
-          await _addressController.getAddress(orders[i].addressId);
-      orders[i].orderDetailsList = await _orderDetailsController
-          .getAllOrderDetailsByClientId(clientId, orders[i].id);
-    }
-    return orders;
-  }
-
-  //get all Cart Products.
-  Future<List<Order>> getAllOrders() async {
-    List<Map> ordersJson = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_ORDERS} order by id desc');
-    List<Order> orders =
-        ordersJson.map<Order>((value) => Order.fromJson(value)).toList();
-    for (int i = 0; i < orders.length; i++) {
-      orders[i].client = await _userController.getUser(orders[i].clientId);
-      orders[i].address =
-          await _addressController.getAddress(orders[i].addressId);
-      orders[i].orderDetailsList =
-          await _orderDetailsController.getAllOrderDetails(orders[i].id);
-    }
-    return orders;
-  }
-
-  //delete Cart Product.
-  Future<int> deleteOrder(int id) async {
-    return await AppShared.db.delete(
-      Constants.APP_DATABASE_TABLE_ORDERS,
-      where: 'id=?',
-      whereArgs: [id],
-    );
-  }
-
-  //update Cart Product.
-  Future<int> updateOrder(int id, Order order) async {
-    return await AppShared.db.update(
-      Constants.APP_DATABASE_TABLE_ORDERS,
-      order.toJson(),
-      where: 'id=?',
-      whereArgs: [id],
-    );
+  Future<List<Order>> getOrdersForClient(String clientId) async {
+    QuerySnapshot querySnapshot = await _orderReference
+        .where(Constants.FIREBASE_ORDERS_FIELD_CLIENT_ID, isEqualTo: clientId)
+        .getDocuments();
+    List<Order> orders = querySnapshot.documents
+        .map((o) => Order.fromJson(o.data)..id = o.documentID)
+        .toList();
+    orders.forEach((element) { })
   }
 }
