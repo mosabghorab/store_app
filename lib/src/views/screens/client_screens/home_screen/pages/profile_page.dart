@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/user_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/auth_controller.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
@@ -19,13 +17,13 @@ class ProfilePageBody extends StatefulWidget {
 }
 
 class _ProfilePageBodyState extends State<ProfilePageBody> {
-  UserController _userController;
+  AuthController _authController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _userController = UserController.instance;
+    _authController = AuthController.instance;
   }
 
   @override
@@ -53,10 +51,8 @@ class _ProfilePageBodyState extends State<ProfilePageBody> {
                           ),
                         ),
                         child: CircleAvatar(
-                          backgroundImage: MemoryImage(
-                            base64Decode(
-                              AppShared.currentUser.personalImage,
-                            ),
+                          backgroundImage: NetworkImage(
+                            AppShared.currentUser.personalImage,
                           ),
                         ),
                       )
@@ -109,7 +105,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody> {
           ),
           FlatButton.icon(
             onPressed: () {
-              _userController.logoutUser();
+              _authController.signOut();
               Navigator.pushReplacementNamed(
                   context, Constants.SCREENS_SPLASH_SCREEN);
             },

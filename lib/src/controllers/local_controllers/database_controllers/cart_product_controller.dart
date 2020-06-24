@@ -27,10 +27,9 @@ class CartProductController {
   }
 
   //get all Cart Products.
-  Future<List<CartProduct>> getAllCartProducts(int clientId) async {
+  Future<List<CartProduct>> getAllCartProducts() async {
     List<Map> cartProductsJson = await AppShared.db.rawQuery(
-        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_CART_PRODUCTS} where clientId=?',
-        [clientId]);
+        'SELECT * FROM ${Constants.APP_DATABASE_TABLE_CART_PRODUCTS}');
     List<CartProduct> cartProducts = cartProductsJson
         .map<CartProduct>((value) => CartProduct.fromJson(value))
         .toList();

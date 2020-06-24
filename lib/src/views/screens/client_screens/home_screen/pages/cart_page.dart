@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/cart_product_controller.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/pages_notifiers/cart_page_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
-import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
 import 'package:storeapp/src/utils/enums.dart';
 import 'package:storeapp/src/utils/helpers.dart';
@@ -40,8 +39,8 @@ class _CartPageBodyState extends State<CartPageBody> {
   }
 
   void _init() async {
-    _cartPageNotifiers.cartProducts = await _cartProductController
-        .getAllCartProducts(AppShared.currentUser.id);
+    _cartPageNotifiers.cartProducts =
+        await _cartProductController.getAllCartProducts();
     _cartPageNotifiers.isLoading = false;
   }
 
@@ -51,8 +50,8 @@ class _CartPageBodyState extends State<CartPageBody> {
     try {
       int result = await _cartProductController
           .deleteCartProduct(_cartPageNotifiers.cartProducts[index].id);
-      _cartPageNotifiers.cartProducts = await _cartProductController
-          .getAllCartProducts(AppShared.currentUser.id);
+      _cartPageNotifiers.cartProducts =
+          await _cartProductController.getAllCartProducts();
       _cartPageNotifiers.isLoading = false;
       if (result > 0)
         Helpers.showMessage(

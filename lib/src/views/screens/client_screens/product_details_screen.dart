@@ -5,7 +5,6 @@ import 'package:storeapp/src/controllers/local_controllers/database_controllers/
 import 'package:storeapp/src/models/local_models/cart_products.dart';
 import 'package:storeapp/src/models/local_models/product.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
-import 'package:storeapp/src/utils/app_shared.dart';
 
 // ignore: must_be_immutable
 class ProductDetailsScreen extends StatelessWidget {
@@ -124,7 +123,7 @@ class _ProductDetailsScreenBodyState extends State<ProductDetailsScreenBody> {
                     await _cartProductController.createCartProduct(
                       CartProduct(
                         productId: widget.product.id,
-                        clientId: AppShared.currentUser.id,
+                        merchantId: widget.product.merchantId,
                         quantity: 1,
                       ),
                     );

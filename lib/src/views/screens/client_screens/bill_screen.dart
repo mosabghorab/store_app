@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/addresses_controller.dart';
 import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/order_controller.dart';
 import 'package:storeapp/src/controllers/local_controllers/database_controllers/cart_product_controller.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/order_details_controller.dart';
 import 'package:storeapp/src/models/local_models/cart_products.dart';
 import 'package:storeapp/src/models/local_models/order.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/bill_screen_notifiers.dart';
@@ -42,7 +41,6 @@ class _BillScreenBodyState extends State<BillScreenBody> {
   BillScreenNotifiers _billScreenNotifiers;
   AddressController _addressController;
   OrderController _orderController;
-  OrderDetailsController _orderDetailsController;
   CartProductController _cartProductController;
 
   @override
@@ -52,7 +50,6 @@ class _BillScreenBodyState extends State<BillScreenBody> {
     _addressController = AddressController.instance;
     _orderController = OrderController.instance;
     _cartProductController = CartProductController.instance;
-    _orderDetailsController = OrderDetailsController.instance;
     _billScreenNotifiers =
         Provider.of<BillScreenNotifiers>(context, listen: false);
     _init();
@@ -60,36 +57,34 @@ class _BillScreenBodyState extends State<BillScreenBody> {
 
   void _init() async {
     _billScreenNotifiers.addresses =
-        await _addressController.getAllAddresses(AppShared.currentUser.id);
+        await _addressController.getAddressesForUser(AppShared.currentUser.uid);
     _billScreenNotifiers.isLoading = false;
   }
 
   void _createOrder() async {
     _billScreenNotifiers.isLoading = true;
     try {
-      int result = await _orderController.createOrder(
+      await _orderController.createOrder(
         Order(
-          clientId: AppShared.currentUser.id,
+          clientId: AppShared.currentUser.uid,
           addressId: _billScreenNotifiers
               .addresses[_billScreenNotifiers.selectedAddress].id,
           date: DateTime.now().millisecondsSinceEpoch,
           status: Helpers.getOrderStatus(OrderStatus.ORDER_STATUS_PENDING),
+          merchantId: widget.cartProducts[0].merchantId,
         ),
       );
-      for (int i = 0; i < widget.cartProducts.length; i++) {
-        await _orderDetailsController.createOrderDetails(OrderDetails(
-            clientId: AppShared.currentUser.id,
-            productId: widget.cartProducts[i].productId,
-            orderId: result));
-      }
+//      for (int i = 0; i < widget.cartProducts.length; i++) {
+//        await _orderDetailsController.createOrderDetails(OrderDetails(
+//            clientId: AppShared.currentUser.id,
+//            productId: widget.cartProducts[i].productId,
+//            orderId: result));
+//      }
       await _cartProductController.deleteAllCartProducts();
       _billScreenNotifiers.isLoading = false;
-      if (result > 0) {
-        Helpers.showMessage(
-            'Order created successfully', MessageType.MESSAGE_SUCCESS);
-        Navigator.pop(context);
-      } else
-        Helpers.showMessage('Operation failed', MessageType.MESSAGE_FAILED);
+      Helpers.showMessage(
+          'Order created successfully', MessageType.MESSAGE_SUCCESS);
+      Navigator.pop(context);
     } catch (error) {
       _billScreenNotifiers.isLoading = false;
       Helpers.showMessage(error.message, MessageType.MESSAGE_FAILED);

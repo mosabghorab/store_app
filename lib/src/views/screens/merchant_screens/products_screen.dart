@@ -135,8 +135,16 @@ class _ProductsScreenBodyState extends State<ProductsScreenBody> {
                                         .products[index].name),
                                     Text(
                                         "${_productsScreenNotifiers.products[index].price} \$"),
-                                    Text(
-                                        "${_productsScreenNotifiers.products[index].category.name} "),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      color: Colors.grey[200],
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      child: Text(
+                                          "${_productsScreenNotifiers.products[index].category.name} "),
+                                    ),
                                   ],
                                 ),
                               ],
@@ -181,13 +189,6 @@ class _ProductsScreenBodyState extends State<ProductsScreenBody> {
                                     child: Icon(
                                       Icons.delete,
                                       color: Colors.red,
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: Colors.blue,
                                     ),
                                   ),
                                 ],

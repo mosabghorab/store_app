@@ -32,11 +32,12 @@ class ProductController {
   Future<List<Product>> getAllProducts() async {
     QuerySnapshot querySnapshot = await _productsReference.getDocuments();
     List<Product> products = querySnapshot.documents
-        .map<Product>((p) => Product.fromJson(p.data)..id = p.documentID);
-    products.forEach((product) async {
-      product.category =
-          await _categoryController.getCategory(product.categoryId);
-    });
+        .map<Product>((p) => Product.fromJson(p.data)..id = p.documentID)
+        .toList();
+    for (int i = 0; i < products.length; i++) {
+      products[i].category =
+          await _categoryController.getCategory(products[i].categoryId);
+    }
     return products;
   }
 
@@ -47,7 +48,8 @@ class ProductController {
             isEqualTo: categoryId)
         .getDocuments();
     List<Product> products = querySnapshot.documents
-        .map<Product>((p) => Product.fromJson(p.data)..id = p.documentID);
+        .map<Product>((p) => Product.fromJson(p.data)..id = p.documentID)
+        .toList();
     products.forEach((product) async {
       product.category =
           await _categoryController.getCategory(product.categoryId);

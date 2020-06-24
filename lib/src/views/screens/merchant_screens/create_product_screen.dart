@@ -75,7 +75,7 @@ class _CreateProductScreenBodyState extends State<CreateProductScreenBody> {
     try {
       if (_createProductScreenNotifiers.image != null)
         _image = await _storageController.uploadFile(
-          '${Constants.FIREBASE_STORAGE_USERS_IMAGES_PATH}${_productName}_${DateTime.now().millisecondsSinceEpoch}',
+          '${Constants.FIREBASE_STORAGE_PRODUCTS_IMAGES_PATH}${_productName}_${DateTime.now().millisecondsSinceEpoch}',
           _createProductScreenNotifiers.image,
         );
       await _productController.createProduct(

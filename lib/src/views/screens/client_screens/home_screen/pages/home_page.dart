@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/category_controller.dart';
-import 'package:storeapp/src/controllers/local_controllers/database_controllers/product_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/product_controller.dart';
 import 'package:storeapp/src/models/local_models/category.dart';
 import 'package:storeapp/src/notifiers/screens_notifiers/client_screens_notifiers/home_screen_notifiers/pages_notifiers/home_page_notifiers.dart';
 import 'package:storeapp/src/styles/app_styles.dart';
@@ -49,10 +47,10 @@ class _HomePageBodyState extends State<HomePageBody> {
     _homePageNotifiers.productsIsLoading = false;
   }
 
-  void _sortByCategory(int categoryId) async {
+  void _sortByCategory(String categoryId) async {
     _homePageNotifiers.productsIsLoading = true;
     _homePageNotifiers.products =
-        await _productController.getProductsByCategory(categoryId);
+        await _productController.getAllProductsByCategory(categoryId);
     _homePageNotifiers.productsIsLoading = false;
   }
 
@@ -230,9 +228,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                                         : Container(
                                             width: double.infinity,
                                             height: 180,
-                                            child: Image.memory(
-                                              base64Decode(_homePageNotifiers
-                                                  .products[index].image),
+                                            child: Image.network(
+                                              _homePageNotifiers
+                                                  .products[index].image,
                                               fit: BoxFit.fill,
                                             ),
                                           ),

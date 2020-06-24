@@ -50,6 +50,7 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
     _formKey = GlobalKey();
     _scaffoldKey = GlobalKey();
     _authController = AuthController.instance;
+    _storageController = StorageController.instance;
     _signUpScreenNotifiers =
         Provider.of<SignUpScreenNotifiers>(context, listen: false);
   }
@@ -90,13 +91,13 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
           Helpers.getUserType(UserType.USER_TYPE_MERCHANT))
         Navigator.pushNamedAndRemoveUntil(
           context,
-          Constants.SCREENS_HOME_SCREEN,
+          Constants.SCREENS_DASHBOARD_SCREEN,
           (_) => false,
         );
       else
         Navigator.pushNamedAndRemoveUntil(
           context,
-          Constants.SCREENS_DASHBOARD_SCREEN,
+          Constants.SCREENS_HOME_SCREEN,
           (_) => false,
         );
     } catch (error) {
@@ -200,6 +201,53 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
                                                     ),
                                                   ),
                                       ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Text('Account Type : '),
+                                  ),
+                                  Selector<SignUpScreenNotifiers, int>(
+                                    selector: (_, value) => value.userType,
+                                    builder: (_, userType, __) => Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            Radio(
+                                              value: Constants.USER_TYPE_CLIENT,
+                                              groupValue: userType,
+                                              onChanged: (value) {
+                                                _signUpScreenNotifiers
+                                                    .userType = value;
+                                              },
+                                            ),
+                                            Text('Client')
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            Radio(
+                                              value:
+                                                  Constants.USER_TYPE_MERCHANT,
+                                              groupValue: userType,
+                                              onChanged: (value) {
+                                                _signUpScreenNotifiers
+                                                    .userType = value;
+                                              },
+                                            ),
+                                            Text('Merchant')
+                                          ],
+                                        )
+                                      ],
                                     ),
                                   ),
                                   SizedBox(

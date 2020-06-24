@@ -32,7 +32,8 @@ class OrderProductController {
 
     List<OrderProduct> orderProducts = querySnapshot.documents
         .map<OrderProduct>((document) =>
-            OrderProduct.fromJson(document.data)..id = document.documentID);
+            OrderProduct.fromJson(document.data)..id = document.documentID)
+        .toList();
     orderProducts.forEach((op) async {
       op.product = await _productController.getProduct(op.productId);
     });

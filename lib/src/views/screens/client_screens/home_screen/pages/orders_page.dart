@@ -39,7 +39,7 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
 
   void _init() async {
     _orderPageNotifiers.orders =
-        await _orderController.getAllOrdersByClientId(AppShared.currentUser.id);
+        await _orderController.getOrdersForClient(AppShared.currentUser.uid);
     _orderPageNotifiers.isLoading = false;
   }
 
@@ -167,7 +167,7 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                 Container(
                                   child: ListView.builder(
                                     itemCount: _orderPageNotifiers
-                                        .orders[index1].orderDetailsList.length,
+                                        .orders[index1].orderProducts.length,
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
                                     itemBuilder: (_, index2) => ListTile(
@@ -175,7 +175,7 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                         children: <Widget>[
                                           _orderPageNotifiers
                                                       .orders[index1]
-                                                      .orderDetailsList[index2]
+                                                      .orderProducts[index2]
                                                       .product
                                                       .image ==
                                                   null
@@ -196,7 +196,7 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                                       base64Decode(
                                                           _orderPageNotifiers
                                                               .orders[index1]
-                                                              .orderDetailsList[
+                                                              .orderProducts[
                                                                   index2]
                                                               .product
                                                               .image),
@@ -219,8 +219,7 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                                   Text(
                                                     _orderPageNotifiers
                                                         .orders[index1]
-                                                        .orderDetailsList[
-                                                            index2]
+                                                        .orderProducts[index2]
                                                         .product
                                                         .name,
                                                     style: TextStyle(
@@ -228,7 +227,7 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    "\$${_orderPageNotifiers.orders[index1].orderDetailsList[index2].product.price}",
+                                                    "\$${_orderPageNotifiers.orders[index1].orderProducts[index2].product.price}",
                                                     style: TextStyle(
                                                       fontSize: 16,
                                                       color: Colors.blue,
@@ -244,7 +243,7 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                                       vertical: 2,
                                                     ),
                                                     child: Text(
-                                                        "${_orderPageNotifiers.orders[index1].orderDetailsList[index2].product.category.name} "),
+                                                        "${_orderPageNotifiers.orders[index1].orderProducts[index2].product.category.name} "),
                                                   ),
                                                   SizedBox(
                                                     height: 5,
