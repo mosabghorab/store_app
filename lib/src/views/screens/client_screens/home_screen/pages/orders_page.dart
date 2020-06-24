@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/order_controller.dart';
@@ -192,14 +190,12 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                                         const BorderRadius.all(
                                                             Radius.circular(
                                                                 10)),
-                                                    child: Image.memory(
-                                                      base64Decode(
-                                                          _orderPageNotifiers
-                                                              .orders[index1]
-                                                              .orderProducts[
-                                                                  index2]
-                                                              .product
-                                                              .image),
+                                                    child: Image.network(
+                                                      _orderPageNotifiers
+                                                          .orders[index1]
+                                                          .orderProducts[index2]
+                                                          .product
+                                                          .image,
                                                       fit: BoxFit.fill,
                                                     ),
                                                   ),
@@ -260,7 +256,8 @@ class _OrdersPageBodyState extends State<OrdersPageBody> {
                                                         alignment:
                                                             AlignmentDirectional
                                                                 .center,
-                                                        child: Text("2")),
+                                                        child: Text(
+                                                            '${_orderPageNotifiers.orders[index1].orderProducts[index2].quantity}')),
                                                   ),
                                                 ],
                                               ),

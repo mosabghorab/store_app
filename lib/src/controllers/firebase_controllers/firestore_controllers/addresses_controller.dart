@@ -39,8 +39,10 @@ class AddressController {
         .where(Constants.FIREBASE_ADDRESSES_FIELD_CLIENT_ID,
             isEqualTo: clientId)
         .getDocuments();
-    return querySnapshot.documents.map<Address>((document) =>
-        Address.fromJson(document.data)..id = document.documentID);
+    return querySnapshot.documents
+        .map<Address>((document) =>
+            Address.fromJson(document.data)..id = document.documentID)
+        .toList();
   }
 
   // get an address.

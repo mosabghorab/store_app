@@ -1,4 +1,5 @@
 import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/product_controller.dart';
+import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/user_controller.dart';
 import 'package:storeapp/src/models/local_models/cart_products.dart';
 import 'package:storeapp/src/utils/app_shared.dart';
 import 'package:storeapp/src/utils/constants.dart';
@@ -6,10 +7,12 @@ import 'package:storeapp/src/utils/constants.dart';
 class CartProductController {
   static CartProductController _instance;
   ProductController _productController;
+  UserController _userController;
 
   //||... private constructor ...||
   CartProductController._() {
     _productController = ProductController.instance;
+    _userController = UserController.instance;
   }
 
   // ||.. singleton pattern ..||
@@ -36,6 +39,8 @@ class CartProductController {
     for (int i = 0; i < cartProducts.length; i++) {
       cartProducts[i].product =
           await _productController.getProduct(cartProducts[i].productId);
+      cartProducts[i].merchant =
+          await _userController.getUser(cartProducts[i].merchantId);
     }
     return cartProducts;
   }

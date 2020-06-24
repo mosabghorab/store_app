@@ -9,7 +9,7 @@ class AppDatabase {
   static Future<Database> initDatabase() async {
     String databasePath = await getDatabasesPath();
     try {
-      return await openDatabase('$databasePath/store.db', version: 6,
+      return await openDatabase('$databasePath/store.db', version: 7,
           onCreate: (Database db, int version) async {
         // When creating the db, create those tables.
         await db

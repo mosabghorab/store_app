@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeapp/src/controllers/firebase_controllers/firestore_controllers/order_controller.dart';
@@ -44,7 +42,7 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
 
   void _init() async {
     _ordersScreenNotifiers.orders =
-        await _orderController.getOrdersForClient(AppShared.currentUser.uid);
+        await _orderController.getOrdersForMerchant(AppShared.currentUser.uid);
     _ordersScreenNotifiers.isLoading = false;
   }
 
@@ -282,14 +280,13 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
                                                                   .all(
                                                               Radius.circular(
                                                                   10)),
-                                                      child: Image.memory(
-                                                        base64Decode(
-                                                            _ordersScreenNotifiers
-                                                                .orders[index1]
-                                                                .orderProducts[
-                                                                    index2]
-                                                                .product
-                                                                .image),
+                                                      child: Image.network(
+                                                        _ordersScreenNotifiers
+                                                            .orders[index1]
+                                                            .orderProducts[
+                                                                index2]
+                                                            .product
+                                                            .image,
                                                         fit: BoxFit.fill,
                                                       ),
                                                     ),

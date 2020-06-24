@@ -29,8 +29,10 @@ class OrderController {
 
 //       ------------------ || .. usable  methods ..|| ----------------------
 
-  Future<void> createOrder(Order order) {
-    return _orderReference.document().setData(order.toJson());
+  Future<String> createOrder(Order order) async {
+    DocumentReference documentReference =
+        await _orderReference.add(order.toJson());
+    return documentReference.documentID;
   }
 
   Future<List<Order>> getOrdersForClient(String clientId) async {
@@ -40,13 +42,35 @@ class OrderController {
     List<Order> orders = querySnapshot.documents
         .map((o) => Order.fromJson(o.data)..id = o.documentID)
         .toList();
-    orders.forEach((o) async {
-      o.client = await _userController.getUser(o.clientId);
-      o.address = await _addressController.getAddress(o.addressId);
-      o.merchant = await _userController.getUser(o.merchantId);
-      o.orderProducts =
-          await _orderProductController.getAllOrderProductsForOrder(o.id);
-    });
+    for (int i = 0; i < orders.length; i++) {
+      orders[i].client = await _userController.getUser(orders[i].clientId);
+      orders[i].address =
+          await _addressController.getAddress(orders[i].addressId);
+      orders[i].merchant = await _userController.getUser(orders[i].merchantId);
+      orders[i].orderProducts = await _orderProductController
+          .getAllOrderProductsForOrder(orders[i].id);
+    }
+
+    return orders;
+  }
+
+  Future<List<Order>> getOrdersForMerchant(String merchantId) async {
+    QuerySnapshot querySnapshot = await _orderReference
+        .where(Constants.FIREBASE_ORDERS_FIELD_MERCHANT_ID,
+            isEqualTo: merchantId)
+        .getDocuments();
+    List<Order> orders = querySnapshot.documents
+        .map((o) => Order.fromJson(o.data)..id = o.documentID)
+        .toList();
+    for (int i = 0; i < orders.length; i++) {
+      orders[i].client = await _userController.getUser(orders[i].clientId);
+      orders[i].address =
+          await _addressController.getAddress(orders[i].addressId);
+      orders[i].merchant = await _userController.getUser(orders[i].merchantId);
+      orders[i].orderProducts = await _orderProductController
+          .getAllOrderProductsForOrder(orders[i].id);
+    }
+
     return orders;
   }
 }

@@ -34,9 +34,21 @@ class OrderProductController {
         .map<OrderProduct>((document) =>
             OrderProduct.fromJson(document.data)..id = document.documentID)
         .toList();
-    orderProducts.forEach((op) async {
-      op.product = await _productController.getProduct(op.productId);
-    });
+    for (int i = 0; i < orderProducts.length; i++) {
+      orderProducts[i].product =
+          await _productController.getProduct(orderProducts[i].productId);
+    }
+
     return orderProducts;
+  }
+
+  // create order products.
+  Future<void> createOrderProduct(
+      String orderId, OrderProduct orderProduct) async {
+    await _orderReference
+        .document(orderId)
+        .collection(Constants.FIREBASE_SUB_COLLECTIONS_ORDER_PRODUCTS)
+        .document()
+        .setData(orderProduct.toJson());
   }
 }
